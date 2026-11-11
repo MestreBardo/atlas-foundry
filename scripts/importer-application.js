@@ -140,12 +140,16 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
 
   async _onFirstRender(context, options) {
     await super._onFirstRender(context, options);
+    queueMicrotask(() => void this.#initialize());
+  }
+
+  async #initialize() {
     if (this.#hasToken) {
       await this.#loadWorlds();
-    } else {
-      this.#status = 'ready';
-      await this.render();
+      return;
     }
+    this.#status = 'ready';
+    await this.render();
   }
 
   async _onRender(context, options) {
