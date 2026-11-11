@@ -1,0 +1,60 @@
+{
+  "ATLAS": {
+    "Settings": {
+      "ApiBaseUrl": {
+        "Name": "Endereço da API do Atlas",
+        "Hint": "Deixe o padrão, a não ser que você use outro servidor do Atlas."
+      },
+      "Token": {
+        "Name": "Token pessoal do Atlas",
+        "Hint": "Crie no Atlas em Perfil → Integrações e cole aqui. Fica só neste navegador e só lê os dados da sua conta."
+      }
+    },
+    "Importer": {
+      "Open": "Importar do Atlas",
+      "Title": "Importar pessoas do Atlas",
+      "NoToken": "Para importar, crie um token no Atlas (Perfil → Integrações) e cole nas configurações do módulo.",
+      "OpenSettings": "Abrir configurações",
+      "Source": "De onde importar",
+      "World": "Mundo",
+      "ChooseWorld": "Escolha um mundo",
+      "Campaign": "Campanha",
+      "WorldItself": "O próprio mundo",
+      "ActAs": "Ver como",
+      "AsMaster": "Mestre",
+      "LoadPersons": "Carregar pessoas",
+      "Loading": "Carregando…",
+      "Retry": "Tentar de novo",
+      "Filter": "Filtrar por nome",
+      "ToggleAll": "Marcar todas",
+      "AlreadyImported": "já importada",
+      "NoPersons": "Nenhuma pessoa aqui.",
+      "Import": "Importar ({count})",
+      "Done": "Atlas: {created} criadas, {updated} atualizadas, {failed} com erro."
+    },
+    "Errors": {
+      "Network": "Não foi possível falar com o Atlas. Confira a conexão e o endereço da API.",
+      "Unauthorized": "O token não vale mais. Crie outro no Atlas e cole nas configurações.",
+      "Forbidden": "Sua conta não pode ver isso no Atlas.",
+      "Generic": "O Atlas respondeu com um erro ({code})."
+    },
+    "Journal": {
+      "Portrait": "Retrato",
+      "Profile": "Ficha",
+      "Nicknames": "Apelidos",
+      "Status": "Situação",
+      "Age": "Idade",
+      "Height": "Altura",
+      "Positions": "Cargos",
+      "Tags": "Tags",
+      "Statuses": {
+        "alive": "Viva",
+        "dead": "Morta",
+        "missing": "Desaparecida",
+        "imprisoned": "Presa",
+        "exiled": "Exilada",
+        "unknown": "Desconhecida"
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "atlas-foundry",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Foundry VTT module that imports persons from Atlas.",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  }
+}

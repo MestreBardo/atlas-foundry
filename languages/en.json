@@ -1,0 +1,60 @@
+{
+  "ATLAS": {
+    "Settings": {
+      "ApiBaseUrl": {
+        "Name": "Atlas API address",
+        "Hint": "Keep the default unless you use another Atlas server."
+      },
+      "Token": {
+        "Name": "Atlas personal token",
+        "Hint": "Create it in Atlas under Profile → Integrations and paste it here. It stays in this browser only and can only read your account's data."
+      }
+    },
+    "Importer": {
+      "Open": "Import from Atlas",
+      "Title": "Import persons from Atlas",
+      "NoToken": "To import, create a token in Atlas (Profile → Integrations) and paste it in the module settings.",
+      "OpenSettings": "Open settings",
+      "Source": "Import from",
+      "World": "World",
+      "ChooseWorld": "Choose a world",
+      "Campaign": "Campaign",
+      "WorldItself": "The world itself",
+      "ActAs": "View as",
+      "AsMaster": "Game master",
+      "LoadPersons": "Load persons",
+      "Loading": "Loading…",
+      "Retry": "Try again",
+      "Filter": "Filter by name",
+      "ToggleAll": "Select all",
+      "AlreadyImported": "already imported",
+      "NoPersons": "No persons here.",
+      "Import": "Import ({count})",
+      "Done": "Atlas: {created} created, {updated} updated, {failed} failed."
+    },
+    "Errors": {
+      "Network": "Could not reach Atlas. Check the connection and the API address.",
+      "Unauthorized": "The token is no longer valid. Create a new one in Atlas and paste it in the settings.",
+      "Forbidden": "Your account cannot see this in Atlas.",
+      "Generic": "Atlas answered with an error ({code})."
+    },
+    "Journal": {
+      "Portrait": "Portrait",
+      "Profile": "Profile",
+      "Nicknames": "Nicknames",
+      "Status": "Status",
+      "Age": "Age",
+      "Height": "Height",
+      "Positions": "Positions",
+      "Tags": "Tags",
+      "Statuses": {
+        "alive": "Alive",
+        "dead": "Dead",
+        "missing": "Missing",
+        "imprisoned": "Imprisoned",
+        "exiled": "Exiled",
+        "unknown": "Unknown"
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "atlas-foundry",
+  "title": "Atlas",
+  "description": "Import the persons of your Atlas worlds and campaigns as journal entries.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Vinycius Monteiro"
+    }
+  ],
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14"
+  },
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/atlas.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    },
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "languages/pt-BR.json"
+    }
+  ],
+  "url": "https://github.com/MestreBardo/atlas-foundry",
+  "manifest": "https://github.com/MestreBardo/atlas-foundry/releases/latest/download/module.json",
+  "download": "https://github.com/MestreBardo/atlas-foundry/releases/latest/download/atlas-foundry.zip"
+}

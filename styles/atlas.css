@@ -1,0 +1,121 @@
+.atlas-importer .window-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+
+.atlas-importer-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.atlas-importer .atlas-scope {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.atlas-importer .atlas-notice,
+.atlas-importer .atlas-error {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border, currentColor);
+  border-radius: 4px;
+}
+
+.atlas-importer .atlas-error {
+  border-color: var(--color-level-error, #c0392b);
+}
+
+.atlas-importer .atlas-persons {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 0;
+}
+
+.atlas-importer .atlas-persons-toolbar {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.atlas-importer .atlas-persons-toolbar input {
+  flex: 1;
+}
+
+.atlas-importer .atlas-persons-toolbar button {
+  flex: 0 0 auto;
+}
+
+.atlas-importer .atlas-person-list {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.atlas-importer .atlas-person {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  cursor: pointer;
+}
+
+.atlas-importer .atlas-person img,
+.atlas-importer .atlas-person-initial {
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.atlas-importer .atlas-person-initial {
+  display: grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  font-weight: bold;
+}
+
+.atlas-importer .atlas-person-name {
+  flex: 1;
+}
+
+.atlas-importer .atlas-person-badge {
+  font-size: 0.8em;
+  opacity: 0.75;
+}
+
+.atlas-importer .atlas-empty,
+.atlas-importer .atlas-status {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.atlas-importer-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.atlas-importer-footer button,
+.atlas-importer-footer progress {
+  flex: 1;
+}
+
+.atlas-import-button {
+  flex: 1 1 100%;
+}
+
+.atlas-person-facts {
+  padding-left: 1.25rem;
+}
