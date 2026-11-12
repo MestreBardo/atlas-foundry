@@ -125,306 +125,193 @@
   padding-left: 1.25rem;
 }
 
-/* Book layout adapted from Atlas UI's book-modal, cover-frame and tag-chip. */
-.atlas-person-sheet {
-  color-scheme: light;
-  color: var(--atlas-ink-900);
-  font-family: var(--atlas-font-body);
-  font-size: 16px;
-  line-height: 1.5;
-  border: 1px solid var(--atlas-gold-600);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
+/* Foundry sheet structure, with Atlas colors and typography. */
+.atlas-person-sheet { font-family: var(--atlas-font-body); }
 .atlas-person-sheet .window-header {
   background: var(--atlas-leather-900);
   color: var(--atlas-menu-text);
-  border-bottom: 1px solid var(--atlas-gold-600);
-  font-family: var(--atlas-font-heading);
+  border-bottom: 1px solid var(--atlas-gold-700);
 }
-
 .atlas-person-sheet .window-content {
   padding: 0;
   overflow: hidden;
   color: var(--atlas-ink-900);
-  background: var(--atlas-leather-900);
+  background: var(--atlas-vellum-50);
 }
-
-.atlas-person-sheet .atlas-dossier {
-  height: 100%;
-  overflow: auto;
-  container-type: inline-size;
-  background-color: var(--atlas-vellum-100);
-  background-image: var(--atlas-paper-shading), var(--atlas-paper-texture);
-  scrollbar-color: var(--atlas-gold-700) transparent;
-}
-
-.atlas-person-sheet .atlas-dossier-masthead {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  min-height: 64px;
-  padding: 0.5rem 1.5rem;
-  border-bottom: 1px solid var(--atlas-gold-600);
-  background-color: var(--atlas-leather-900);
-  background-image: var(--atlas-leather-shading), var(--atlas-paper-texture);
-  color: var(--atlas-menu-text);
-}
-
-.atlas-person-sheet .atlas-wordmark {
-  width: 90px;
-  height: 44px;
-  flex: 0 0 auto;
-  border: 0;
-  border-radius: 0;
-  object-fit: contain;
-}
-
-.atlas-person-sheet .atlas-dossier-scope {
-  min-width: 0;
-  font-family: var(--atlas-font-heading);
-  font-size: 0.95rem;
-  letter-spacing: 0.08em;
-  overflow-wrap: anywhere;
-}
-
-.atlas-person-sheet button {
-  width: auto;
-  height: auto;
-  min-height: 2rem;
-  padding: 0.3rem 0.75rem;
-  border: 1px solid var(--atlas-gold-600);
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  color: var(--atlas-ink-900);
-  font: 600 1rem/1.4 var(--atlas-font-heading);
-  letter-spacing: 0.04em;
-  white-space: normal;
-  cursor: pointer;
-  transition: border-color 200ms, color 200ms;
-}
-
-.atlas-person-sheet button:hover {
-  border-color: var(--atlas-rubric-700);
-  color: var(--atlas-rubric-700);
-  text-shadow: none;
-}
-
-.atlas-person-sheet button:focus-visible {
-  outline: 2px solid var(--atlas-rubric-700);
-  outline-offset: 3px;
-}
-
-.atlas-person-sheet .atlas-dossier-masthead button {
-  flex: 0 0 auto;
-  margin-left: auto;
-  border-color: var(--atlas-gold-500);
-  background: linear-gradient(to bottom, var(--atlas-rubric-600), var(--atlas-rubric-800));
-  box-shadow: 0 3px 10px #32190847;
-  color: var(--atlas-vellum-50);
-}
-
-.atlas-person-sheet .atlas-dossier-masthead button:hover { filter: brightness(1.08); }
-.atlas-person-sheet .atlas-dossier-masthead button:focus-visible { outline-color: var(--atlas-gold-300); }
-
-.atlas-person-sheet .atlas-dossier-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  min-height: calc(100% - 65px);
-}
-
-.atlas-person-sheet .atlas-dossier-sidebar {
+.atlas-person-sheet .atlas-character {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  min-width: 0;
-  padding: 1.8rem 2rem;
-  border-right: 1px solid #8a642055;
-  background-image:
-    linear-gradient(to left, #32190845, transparent 12%),
-    var(--atlas-paper-shading), var(--atlas-paper-texture);
+  height: 100%;
+  min-height: 0;
+  container-type: inline-size;
+  background-image: linear-gradient(#f6ecd2d9, #f6ecd2d9), var(--atlas-paper-texture);
+  font: 16px/1.5 var(--atlas-font-body);
+  color: var(--atlas-ink-900);
 }
-
-.atlas-person-sheet .atlas-dossier-identity { text-align: center; }
-
-.atlas-person-sheet .atlas-dossier-identity h1 {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  color: var(--atlas-heading-accent);
-  font: 600 clamp(1.8rem, 4cqi, 2.4rem)/1.1 var(--atlas-font-heading);
-  letter-spacing: 0.025em;
-  overflow-wrap: anywhere;
-  text-shadow: none;
+.atlas-person-sheet .atlas-sheet-header {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  flex: 0 0 auto;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid #8a642033;
 }
-
-.atlas-person-sheet .atlas-dossier-aliases {
-  margin: 0.6rem 0 0;
-  color: var(--atlas-ink-700);
-  font: italic 1.1rem/1.4 var(--atlas-font-body);
-}
-
-.atlas-person-sheet .atlas-dossier-portrait {
-  position: relative;
-  flex: 1 0 auto;
-  min-height: 260px;
-  padding: 7px;
-  border: 1.5px solid var(--atlas-gold-600);
-  border-radius: 0;
-  background: #eddcb780;
-  box-shadow: 0 10px 26px #46280f38;
-}
-
-.atlas-person-sheet .atlas-dossier-portrait::before {
-  content: '';
-  position: absolute;
-  inset: 5px;
-  border: 1px solid #a77e2d99;
-  pointer-events: none;
-}
-
-.atlas-person-sheet .atlas-dossier-picture {
+.atlas-person-sheet .atlas-sheet-portrait {
   display: grid;
   place-items: center;
-  position: relative;
-  height: 100%;
-  min-height: 260px;
+  width: 104px;
+  height: 116px;
   overflow: hidden;
-  background-color: var(--atlas-vellum-50);
-  background-image: var(--atlas-paper-shading), var(--atlas-paper-texture);
+  border: 1px solid var(--atlas-gold-700);
+  border-radius: 3px;
+  background: var(--atlas-vellum-100);
+  color: var(--atlas-gold-700);
 }
-
-.atlas-person-sheet .atlas-dossier-picture img {
-  position: absolute;
-  inset: 0;
+.atlas-person-sheet .atlas-sheet-portrait img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border: 0;
   border-radius: 0;
 }
-
-.atlas-person-sheet .atlas-portrait-corner {
-  position: absolute;
-  z-index: 1;
-  width: 14px;
-  height: 14px;
-  border: 0 solid var(--atlas-gold-600);
-  pointer-events: none;
-}
-
-.atlas-person-sheet .atlas-portrait-corner-tl { top: -3px; left: -3px; border-top-width: 2.5px; border-left-width: 2.5px; }
-.atlas-person-sheet .atlas-portrait-corner-tr { top: -3px; right: -3px; border-top-width: 2.5px; border-right-width: 2.5px; }
-.atlas-person-sheet .atlas-portrait-corner-bl { bottom: -3px; left: -3px; border-bottom-width: 2.5px; border-left-width: 2.5px; }
-.atlas-person-sheet .atlas-portrait-corner-br { bottom: -3px; right: -3px; border-bottom-width: 2.5px; border-right-width: 2.5px; }
-
-.atlas-person-sheet .atlas-dossier-initial {
-  display: grid;
-  place-items: center;
-  width: 120px;
-  height: 150px;
-  border: 3px double var(--atlas-gold-600);
-  color: var(--atlas-gold-700);
-  font: 900 5rem/1 var(--atlas-font-display);
-}
-
-.atlas-person-sheet .atlas-dossier-person-label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  color: var(--atlas-ink-700);
-  font: 600 1rem/1.4 var(--atlas-font-heading);
-  letter-spacing: 0.08em;
-}
-
-.atlas-person-sheet .atlas-dossier-person-label i { color: var(--atlas-rubric-700); }
-
-.atlas-person-sheet .atlas-dossier-status {
-  padding: 0.15rem 0.6rem;
-  border: 1px solid var(--atlas-gold-600);
-  border-radius: 999px;
-  font-size: 0.875rem;
-  letter-spacing: 0.04em;
-}
-
-.atlas-person-sheet .atlas-dossier-main {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  padding: 2rem 2.4rem;
-  background-image:
-    linear-gradient(to right, #32190825, transparent 12%),
-    var(--atlas-paper-shading), var(--atlas-paper-texture);
-}
-
-.atlas-person-sheet .atlas-dossier-facts { margin: 0 0 1.25rem; }
-.atlas-person-sheet .atlas-dossier-facts > div { display: flex; align-items: baseline; gap: 0.5rem; margin: 0.25rem 0; }
-.atlas-person-sheet .atlas-dossier-facts > div::before {
-  content: '';
-  align-self: center;
-  flex: 0 0 6px;
-  height: 6px;
-  margin-right: 0.15rem;
-  background: var(--atlas-rubric-700);
-  transform: rotate(45deg);
-}
-.atlas-person-sheet dt { color: var(--atlas-ink-700); font-family: var(--atlas-font-heading); letter-spacing: 0.04em; }
-.atlas-person-sheet dd { margin: 0; color: var(--atlas-ink-700); overflow-wrap: anywhere; }
-
-.atlas-person-sheet .atlas-dossier-main h2 {
-  margin: 0 0 0.6rem;
-  padding: 0;
-  border: 0;
-  color: var(--atlas-heading-accent);
-  font: 600 1.8rem/1.2 var(--atlas-font-heading);
-  letter-spacing: 0.04em;
-  text-transform: none;
-  text-shadow: none;
-}
-
-.atlas-person-sheet .atlas-dossier-positions { margin-bottom: 1.5rem; }
-.atlas-person-sheet .atlas-dossier-positions ul { margin: 0; padding: 0; list-style: none; }
-.atlas-person-sheet .atlas-dossier-prose { font: 1.1rem/1.55 var(--atlas-font-body); overflow-wrap: anywhere; }
-.atlas-person-sheet .atlas-dossier-prose > :first-child { margin-top: 0; }
-.atlas-person-sheet .atlas-dossier-prose > :last-child { margin-bottom: 0; }
-.atlas-person-sheet .atlas-dossier-prose img { max-width: 100%; height: auto; }
-.atlas-person-sheet .atlas-dossier-prose a { color: var(--atlas-rubric-700); }
-.atlas-person-sheet .atlas-dossier-prose h1,
-.atlas-person-sheet .atlas-dossier-prose h2,
-.atlas-person-sheet .atlas-dossier-prose h3 { margin: 1rem 0 0.5rem; font-family: var(--atlas-font-heading); color: var(--atlas-heading-accent); text-shadow: none; }
-.atlas-person-sheet .atlas-dossier-prose blockquote { margin-inline: 0; padding-left: 1rem; border-left: 4px solid var(--atlas-gold-500); font-style: italic; color: var(--atlas-ink-700); }
-.atlas-person-sheet .atlas-dossier-prose table { display: block; max-width: 100%; overflow-x: auto; }
-.atlas-person-sheet .atlas-dossier-prose pre { max-width: 100%; overflow-x: auto; }
-.atlas-person-sheet .atlas-dossier-empty { color: var(--atlas-ink-500); font-style: italic; }
-
-.atlas-person-sheet .atlas-dossier-notes { margin: 1.5rem 0; }
-.atlas-person-sheet .atlas-dossier-notes button { display: block; margin: 0.4rem 0; text-align: left; }
-.atlas-person-sheet .atlas-dossier-tag-footer { margin-top: auto; padding-top: 1.5rem; }
-.atlas-person-sheet .atlas-dossier-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
-.atlas-person-sheet .atlas-dossier-tags li {
-  padding: 0.125rem 0.75rem;
-  border: 1px solid #a77e2d99;
-  border-radius: 999px;
-  background: #ecd08a33;
-  color: var(--atlas-ink-700);
-  font: 600 0.9rem/1.4 var(--atlas-font-heading);
+.atlas-person-sheet .atlas-sheet-initial { font: 900 3.2rem/1 var(--atlas-font-display); }
+.atlas-person-sheet .atlas-sheet-identity { min-width: 0; }
+.atlas-person-sheet .atlas-sheet-source {
+  margin: 0 0 0.2rem;
+  color: var(--atlas-rubric-700);
+  font: 600 0.8rem/1.35 var(--atlas-font-heading);
   letter-spacing: 0.08em;
   overflow-wrap: anywhere;
 }
-
-@container (max-width: 620px) {
-  .atlas-person-sheet .atlas-dossier-layout { grid-template-columns: minmax(0, 1fr); }
-  .atlas-person-sheet .atlas-dossier-masthead { gap: 0.5rem; padding-inline: 1rem; flex-wrap: wrap; }
-  .atlas-person-sheet .atlas-dossier-scope { flex: 1 1 100%; order: 3; padding-bottom: 0.25rem; }
-  .atlas-person-sheet .atlas-dossier-sidebar { padding: 1.5rem; border-right: 0; background-image: var(--atlas-paper-shading), var(--atlas-paper-texture); }
-  .atlas-person-sheet .atlas-dossier-main { padding: 0.5rem 1.5rem 1.5rem; background-image: var(--atlas-paper-shading), var(--atlas-paper-texture); }
-  .atlas-person-sheet .atlas-dossier-portrait { min-height: 320px; }
-  .atlas-person-sheet .atlas-dossier-identity h1 { font-size: 2rem; }
+.atlas-person-sheet .atlas-sheet-source span { color: var(--atlas-ink-500); }
+.atlas-person-sheet .atlas-sheet-identity h1 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: 700 2rem/1.1 var(--atlas-font-heading);
+  color: var(--atlas-heading-accent);
+  overflow-wrap: anywhere;
+  text-shadow: none;
 }
+.atlas-person-sheet .atlas-sheet-aliases { margin: 0.25rem 0 0; color: var(--atlas-ink-500); font-style: italic; }
+.atlas-person-sheet .atlas-sheet-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem 0.9rem; margin-top: 0.65rem; font-size: 0.9rem; color: var(--atlas-ink-700); }
+.atlas-person-sheet .atlas-sheet-summary-label { margin-right: 0.25rem; color: var(--atlas-ink-500); font-family: var(--atlas-font-heading); }
+.atlas-person-sheet .atlas-sheet-status { padding: 0.05rem 0.45rem; border: 1px solid #71241944; border-radius: 3px; background: #7124190a; color: var(--atlas-rubric-700); font-family: var(--atlas-font-heading); }
+.atlas-person-sheet button {
+  width: auto;
+  height: auto;
+  min-height: 30px;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #8a642066;
+  border-radius: 3px;
+  background: #eddcb755;
+  color: var(--atlas-ink-700);
+  box-shadow: none;
+  font: 600 0.95rem/1.4 var(--atlas-font-heading);
+  white-space: normal;
+  cursor: pointer;
+}
+.atlas-person-sheet button:hover { border-color: var(--atlas-rubric-700); background-color: #7124190a; color: var(--atlas-rubric-700); text-shadow: none; }
+.atlas-person-sheet button:focus-visible { outline: 2px solid var(--atlas-rubric-700); outline-offset: 2px; }
+.atlas-person-sheet .atlas-journal-action { align-self: start; font-size: 0.85rem; }
+.atlas-person-sheet .atlas-sheet-tabs {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  gap: 0;
+  margin: 0;
+  padding: 0 1rem;
+  border: 0;
+  border-bottom: 1px solid #71241944;
+  background: #eddcb74d;
+}
+.atlas-person-sheet .atlas-sheet-tabs .item {
+  flex: 0 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--atlas-ink-500);
+  font: 600 1rem/1.3 var(--atlas-font-heading);
+  text-shadow: none;
+}
+.atlas-person-sheet .atlas-sheet-tabs .item.active {
+  border-bottom-color: var(--atlas-rubric-700);
+  background: #71241908;
+  color: var(--atlas-rubric-700);
+}
+.atlas-person-sheet .atlas-sheet-tabs .item:hover { color: var(--atlas-rubric-700); background: #71241908; }
+.atlas-person-sheet .atlas-sheet-tabs .item i { font-size: 0.8em; }
+.atlas-person-sheet .atlas-sheet-body {
+  flex: 1;
+  min-height: 0;
+  padding: 1.25rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--atlas-gold-700) transparent;
+}
+.atlas-person-sheet .atlas-sheet-body > .tab { display: none; }
+.atlas-person-sheet .atlas-sheet-body > .tab.active { display: block; }
+.atlas-person-sheet .atlas-sheet-body > .tab[hidden] { display: none !important; }
+.atlas-person-sheet .atlas-sheet-body h2 {
+  margin: 0 0 1rem;
+  padding: 0 0 0.45rem;
+  border: 0;
+  border-bottom: 1px solid #71241933;
+  color: var(--atlas-heading-accent);
+  font: 600 1.4rem/1.2 var(--atlas-font-heading);
+  text-shadow: none;
+}
+.atlas-person-sheet .atlas-sheet-body h3 {
+  margin: 0 0 0.6rem;
+  border: 0;
+  color: var(--atlas-ink-700);
+  font: 600 1.15rem/1.25 var(--atlas-font-heading);
+  text-shadow: none;
+}
+.atlas-person-sheet .atlas-sheet-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.65rem; margin: 0; }
+.atlas-person-sheet .atlas-sheet-facts > div { padding: 0.6rem 0.8rem; border: 1px solid #8a642033; border-radius: 3px; background: #eddcb740; }
+.atlas-person-sheet .atlas-sheet-facts dt { color: var(--atlas-ink-500); font: 600 0.85rem/1.4 var(--atlas-font-heading); }
+.atlas-person-sheet .atlas-sheet-facts dd { margin: 0.2rem 0 0; font-weight: 600; font-size: 1.15rem; overflow-wrap: anywhere; }
+.atlas-person-sheet .atlas-sheet-section { margin-top: 1.5rem; }
+.atlas-person-sheet .atlas-sheet-positions { margin: 0; padding: 0; list-style: none; }
+.atlas-person-sheet .atlas-sheet-positions li { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px solid #8a642029; overflow-wrap: anywhere; }
+.atlas-person-sheet .atlas-sheet-positions i { color: var(--atlas-gold-700); font-size: 0.8rem; }
+.atlas-person-sheet .atlas-sheet-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.atlas-person-sheet .atlas-sheet-tags li { padding: 0.1rem 0.6rem; border: 1px solid #8a642055; border-radius: 3px; color: var(--atlas-ink-700); background: #eddcb755; font-size: 0.9rem; overflow-wrap: anywhere; }
+.atlas-person-sheet .atlas-sheet-prose { font: 1.05rem/1.65 var(--atlas-font-body); overflow-wrap: anywhere; }
+.atlas-person-sheet .atlas-sheet-prose > :first-child { margin-top: 0; }
+.atlas-person-sheet .atlas-sheet-prose img { max-width: 100%; height: auto; }
+.atlas-person-sheet .atlas-sheet-prose a { color: var(--atlas-rubric-700); }
+.atlas-person-sheet .atlas-sheet-prose h1,
+.atlas-person-sheet .atlas-sheet-prose h2,
+.atlas-person-sheet .atlas-sheet-prose h3 { margin: 1rem 0 0.5rem; font-family: var(--atlas-font-heading); color: var(--atlas-heading-accent); text-shadow: none; }
+.atlas-person-sheet .atlas-sheet-prose blockquote { margin-inline: 0; padding-left: 1rem; border-left: 3px solid var(--atlas-gold-500); font-style: italic; color: var(--atlas-ink-700); }
+.atlas-person-sheet .atlas-sheet-prose table { display: block; max-width: 100%; overflow-x: auto; }
+.atlas-person-sheet .atlas-sheet-prose pre { max-width: 100%; overflow-x: auto; }
+.atlas-person-sheet .atlas-sheet-empty { color: var(--atlas-ink-500); font-style: italic; }
+.atlas-person-sheet .atlas-sheet-pages { margin: 0; padding: 0; list-style: none; }
+.atlas-person-sheet .atlas-sheet-pages li { border-bottom: 1px solid #8a642033; }
+.atlas-person-sheet .atlas-sheet-pages button { display: flex; align-items: center; gap: 0.75rem; width: 100%; margin: 0; padding: 0.65rem 0.5rem; border: 0; border-radius: 0; background: transparent; text-align: left; }
+.atlas-person-sheet .atlas-sheet-pages button span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.atlas-person-sheet .atlas-sheet-pages button i:last-child { font-size: 0.7rem; opacity: 0.65; }
+.atlas-person-sheet .atlas-sheet-footer { flex: 0 0 auto; padding: 0.3rem 1rem; border-top: 1px solid #8a642033; color: var(--atlas-ink-500); font: 600 0.75rem/1.4 var(--atlas-font-heading); text-align: right; }
 
-@media (prefers-reduced-motion: reduce) {
-  .atlas-person-sheet button { transition: none; }
+@container (max-width: 520px) {
+  .atlas-person-sheet .atlas-sheet-header { grid-template-columns: 76px minmax(0, 1fr); gap: 0.75rem; padding: 1rem; }
+  .atlas-person-sheet .atlas-sheet-portrait { width: 76px; height: 92px; }
+  .atlas-person-sheet .atlas-sheet-initial { font-size: 2.5rem; }
+  .atlas-person-sheet .atlas-sheet-identity h1 { font-size: 1.65rem; }
+  .atlas-person-sheet .atlas-journal-action { grid-column: 2; justify-self: start; }
+  .atlas-person-sheet .atlas-sheet-tabs { padding-inline: 0.35rem; }
+  .atlas-person-sheet .atlas-sheet-tabs .item { padding-inline: 0.65rem; font-size: 0.9rem; }
+  .atlas-person-sheet .atlas-sheet-tabs .item i { display: none; }
+  .atlas-person-sheet .atlas-sheet-body { padding: 1rem; }
 }

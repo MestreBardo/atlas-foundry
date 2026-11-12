@@ -62,7 +62,9 @@
       "OpenJournal": "Open journal",
       "History": "History",
       "LocalPages": "Local pages",
-      "NoDescription": "No history recorded."
+      "NoDescription": "No history recorded.",
+      "Details": "Details",
+      "NoLocalPages": "No local pages. Use Open journal to access the Foundry journal."
     }
   }
 }

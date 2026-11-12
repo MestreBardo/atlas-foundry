@@ -23,12 +23,12 @@ Outros módulos e macros podem abrir a janela com `game.modules.get('atlas-found
 
 ## Ficha de pessoa Atlas
 
-As pessoas importadas abrem na ficha **Pessoa Atlas**, com retrato, apelidos, situação, idade, altura, cargos, tags e história. O visual segue o tema padrão **Codex** do Atlas: livro aberto, papel de pergaminho, moldura dourada, couro escuro e detalhes em vermelho. A ficha usa os dados já importados, sem precisar consultar a API ou ter o token do mestre para abrir.
+As pessoas importadas abrem na ficha **Pessoa Atlas**, com retrato, apelidos, situação, idade, altura, cargos, tags e história. A organização segue as fichas do Foundry: cabeçalho compacto com retrato e informações rápidas, abas nativas de **Ficha**, **História** e **Páginas locais**, e conteúdo com rolagem própria. As abas também aceitam navegação por teclado (setas, Home e End). A ficha usa os dados já importados, sem precisar consultar a API ou ter o token do mestre para abrir.
 
-O logotipo e a textura de papel vêm do Atlas UI. As fontes originais (Cinzel Decorative, Cormorant SC e EB Garamond) estão incluídas no módulo com suas licenças, sem carregar Google Fonts durante o uso. As cores e fontes ficam isoladas na ficha, sem alterar o tema das outras janelas do Foundry. Esta versão usa a aparência padrão; não sincroniza os estilos ou paletas personalizados de cada mundo.
+A identidade visual usa o tema padrão **Codex** do Atlas: pergaminho sutil, tons de tinta e couro, vermelho e dourado. A textura de papel vem do Atlas UI. As fontes originais (Cinzel Decorative, Cormorant SC e EB Garamond) estão incluídas no módulo com suas licenças, sem carregar Google Fonts durante o uso. As cores e fontes ficam isoladas na ficha, sem alterar o tema das outras janelas do Foundry. Esta versão usa a aparência padrão; não sincroniza os estilos ou paletas personalizados de cada mundo.
 
 - Para entradas importadas antes desta versão, importe a pessoa novamente ou escolha **Pessoa Atlas** em **Configurar ficha** no menu da entrada.
-- **Abrir diário** abre a interface padrão do Foundry para editar e criar páginas. As páginas locais também aparecem como atalhos no dossiê e continuam preservadas nas reimportações.
+- **Abrir diário** abre a interface padrão do Foundry para editar e criar páginas. As páginas locais também aparecem como atalhos na aba **Páginas locais** e continuam preservadas nas reimportações.
 - A reimportação atualiza os dados vindos do Atlas. Uma ficha alternativa escolhida manualmente é preservada.
 - O compartilhamento continua pelas permissões de entrada e página do Foundry. Leitores com acesso limitado veem apenas a identidade e o retrato permitido; a ficha completa exige acesso de observador. O módulo não cria Actors nem depende de um sistema de regras.
 

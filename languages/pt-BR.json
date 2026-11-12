@@ -62,7 +62,9 @@
       "OpenJournal": "Abrir diário",
       "History": "História",
       "LocalPages": "Páginas locais",
-      "NoDescription": "Nenhuma história registrada."
+      "NoDescription": "Nenhuma história registrada.",
+      "Details": "Ficha",
+      "NoLocalPages": "Nenhuma página local. Use Abrir diário para acessar o diário do Foundry."
     }
   }
 }
