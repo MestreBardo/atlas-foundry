@@ -2,7 +2,7 @@
   "id": "atlas-foundry",
   "title": "Atlas",
   "description": "Import the persons of your Atlas worlds and campaigns as journal entries.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "authors": [
     {
       "name": "Vinycius Monteiro"
