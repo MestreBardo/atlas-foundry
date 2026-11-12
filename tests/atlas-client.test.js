@@ -76,3 +76,42 @@ test('answers a network failure with its own code', async () => {
 
   await assert.rejects(client.listWorlds(), { code: 'NETWORK_ERROR' });
 });
+
+test('loads every person document page with the selected campaign viewpoint', async () => {
+  const requests = [];
+  const client = new AtlasClient({
+    apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
+    fetchImplementation: async (url, options) => {
+      requests.push(url);
+      assert.equal(options.headers['X-Adventurer-Id'], 'adv1');
+      return jsonResponse(200, url.includes('cursor=')
+        ? { payload: [{ id: 'd2', text: 'Second' }] }
+        : { payload: [{ id: 'd1', text: 'First' }], links: { next: { href: '/campaigns/c1/persons/p1/documents?limit=50&cursor=d1' } } });
+    },
+  });
+  const documents = await client.listPersonDocuments({ type: 'campaign', id: 'c1', adventurerId: 'adv1' }, 'p1');
+  assert.equal(requests[0], 'https://api.test/campaigns/c1/persons/p1/documents?limit=50');
+  assert.deepEqual(documents.map(({ id }) => id), ['d1', 'd2']);
+});
+
+test('uses the world document endpoint and encodes identifiers', async () => {
+  const client = new AtlasClient({
+    apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
+    fetchImplementation: async (url, options) => {
+      assert.equal(url, 'https://api.test/worlds/world%2F1/persons/person%201/documents?limit=50');
+      assert.equal(options.headers['X-Adventurer-Id'], undefined);
+      return jsonResponse(200, { payload: [] });
+    },
+  });
+  assert.deepEqual(await client.listPersonDocuments({ type: 'world', id: 'world/1' }, 'person 1'), []);
+});
+
+test('fails an incomplete document list instead of treating it as empty', async () => {
+  const client = new AtlasClient({
+    apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
+    fetchImplementation: async (url) => url.includes('cursor=')
+      ? jsonResponse(403, {})
+      : jsonResponse(200, { payload: [{ id: 'd1' }], links: { next: { href: '/worlds/w1/persons/p1/documents?cursor=next' } } }),
+  });
+  await assert.rejects(client.listPersonDocuments({ type: 'world', id: 'w1' }, 'p1'), { code: 'HTTP_403' });
+});

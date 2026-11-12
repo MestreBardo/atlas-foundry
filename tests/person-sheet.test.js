@@ -12,7 +12,7 @@ const person = {
   description: 'History', portrait: 'ada.webp',
 };
 const pageDocument = (data, id = 'page') => ({
-  ...data, id, getFlag: (scope, key) => data.flags?.[scope]?.[key],
+  ...data, id, getFlag(scope, key) { return this.flags?.[scope]?.[key]; },
 });
 const entryDocument = (pages) => ({
   name: person.name, pages,
@@ -65,8 +65,9 @@ test('new imports choose the Atlas sheet without changing default ownership', as
 test('reimport upgrades older entries, preserves local pages and explicit sheet choices', async () => {
   for (const chosenSheet of [undefined, 'other.CustomSheet']) {
     let update;
-    let removed;
-    let added;
+    let removed = [];
+    let added = [];
+    let updatedPages = [];
     const entry = {
       pages: [
         pageDocument({ flags: { [MODULE_ID]: { part: 'profile' } }, ownership: { default: 0, player: 2 } }, 'imported'),
@@ -76,15 +77,17 @@ test('reimport upgrades older entries, preserves local pages and explicit sheet 
       update: async (data) => { update = data; },
       deleteEmbeddedDocuments: async (_type, ids) => { removed = ids; },
       createEmbeddedDocuments: async (_type, pages) => { added = pages; },
+      updateEmbeddedDocuments: async (_type, pages) => { updatedPages = pages; },
     };
     globalThis.game = { journal: [entry] };
     const result = await writePersonEntry(person, { id: 'w1', type: 'world', name: 'World' }, {
       folder: { id: 'folder' }, labels,
     });
     assert.equal(result, 'updated');
-    assert.deepEqual(removed, ['imported']);
-    assert.equal(added.length, 2);
-    assert.deepEqual(added[1].ownership, { default: 0, player: 2 });
+    assert.deepEqual(removed, []);
+    assert.equal(added.length, 1);
+    assert.equal(updatedPages[0]._id, 'imported');
+    assert.deepEqual(updatedPages[0].ownership, { default: 0, player: 2 });
     assert.equal(update.flags.core?.sheetClass, chosenSheet ? undefined : PERSON_SHEET_ID);
     assert.equal(update.ownership, undefined);
   }

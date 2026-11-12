@@ -22,6 +22,9 @@ export const buildPersonSheetData = (entry, visiblePages) => {
       .filter(Boolean),
     tags: person?.tags ?? [],
     profileHtml: profile?.text?.content ?? '',
+    documents: visiblePages
+      .filter((page) => page.getFlag(MODULE_ID, 'part') === 'document')
+      .map((page) => ({ id: page.id, name: page.name, subtitle: page.getFlag(MODULE_ID, 'subtitle') ?? '' })),
     localPages: visiblePages
       .filter((page) => !page.getFlag(MODULE_ID, 'part'))
       .map((page) => ({ id: page.id, name: page.name })),

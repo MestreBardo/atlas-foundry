@@ -54,7 +54,8 @@
         "imprisoned": "Presa",
         "exiled": "Exilada",
         "unknown": "Desconhecida"
-      }
+      },
+      "Author": "Autoria"
     },
     "Sheet": {
       "Title": "Pessoa Atlas",
@@ -64,7 +65,10 @@
       "LocalPages": "Páginas locais",
       "NoDescription": "Nenhuma história registrada.",
       "Details": "Ficha",
-      "NoLocalPages": "Nenhuma página local. Use Abrir diário para acessar o diário do Foundry."
+      "NoLocalPages": "Nenhuma página local. Use Abrir diário para acessar o diário do Foundry.",
+      "Documents": "Documentos",
+      "NoDocuments": "Nenhum documento importado. Reimporte a pessoa para trazer os documentos disponíveis no Atlas.",
+      "DocumentsSharing": "Gerencie o compartilhamento de cada documento em Abrir diário."
     }
   }
 }

@@ -59,6 +59,20 @@
     </section>
     {{/if}}
 
+    {{#if tabs.documents}}
+    <section class="tab {{tabs.documents.cssClass}}" data-group="primary" data-tab="documents" role="tabpanel" id="{{sheetId}}-panel-documents" aria-labelledby="{{sheetId}}-tab-documents" {{#unless tabs.documents.active}}hidden{{/unless}}>
+      <h2>{{localize "ATLAS.Sheet.Documents"}}</h2>
+      {{#if person.documents.length}}
+      <ul class="atlas-sheet-pages">
+        {{#each person.documents}}
+        <li><button type="button" data-action="openJournal" data-page-id="{{id}}"><i class="fa-solid fa-file-lines" inert></i><span>{{name}}{{#if subtitle}}<small class="atlas-document-summary">{{subtitle}}</small>{{/if}}</span><i class="fa-solid fa-arrow-up-right-from-square" inert></i></button></li>
+        {{/each}}
+      </ul>
+      <p class="atlas-sheet-empty">{{localize "ATLAS.Sheet.DocumentsSharing"}}</p>
+      {{else}}<p class="atlas-sheet-empty">{{localize "ATLAS.Sheet.NoDocuments"}}</p>{{/if}}
+    </section>
+    {{/if}}
+
     {{#if tabs.notes}}
     <section class="tab {{tabs.notes.cssClass}}" data-group="primary" data-tab="notes" role="tabpanel" id="{{sheetId}}-panel-notes" {{#if showTabs}}aria-labelledby="{{sheetId}}-tab-notes"{{else}}aria-label="{{localize 'ATLAS.Sheet.LocalPages'}}"{{/if}} {{#unless tabs.notes.active}}hidden{{/unless}}>
       <h2>{{localize "ATLAS.Sheet.LocalPages"}}</h2>

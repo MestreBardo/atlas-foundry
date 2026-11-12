@@ -29,6 +29,7 @@ const readPageLabels = () => ({
   height: localize('Journal.Height'),
   positions: localize('Journal.Positions'),
   tags: localize('Journal.Tags'),
+  author: localize('Journal.Author'),
   statuses: Object.fromEntries(
     PERSON_STATUSES.map((status) => [status, localize(`Journal.Statuses.${status}`)]),
   ),
@@ -285,10 +286,15 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
     const labels = readPageLabels();
     try {
       const folder = await ensureScopeFolder(scope);
+      const client = this.#client;
       for (const personId of personIds) {
         try {
-          const person = await this.#client.findPerson(scope, personId);
-          counts[await writePersonEntry(person, scope, { folder, labels })] += 1;
+          // Do not replace a previous import if any document page cannot be read.
+          const [person, documents] = await Promise.all([
+            client.findPerson(scope, personId),
+            client.listPersonDocuments(scope, personId),
+          ]);
+          counts[await writePersonEntry(person, scope, { folder, labels, documents })] += 1;
         } catch (error) {
           counts.failed += 1;
           console.error(`${MODULE_ID} | ${personId}`, error);

@@ -15,15 +15,24 @@ Na aba **Diário**, o mestre vê o botão **Importar do Atlas**:
 
 1. Escolha o mundo e, se quiser, uma campanha dele (na campanha, "Ver como" escolhe um dos seus personagens; o padrão é o mestre).
 2. **Carregar pessoas**, filtre e marque quem importar.
-3. **Importar**: cada pessoa vira uma entrada de diário na pasta `Atlas · <nome>`, com uma página de retrato (quando há imagem) e uma de ficha (apelidos, situação, idade, altura, cargos, tags e a descrição em markdown; menções viram o nome em negrito).
+3. **Importar**: cada pessoa vira uma entrada de diário na pasta `Atlas · <nome>`, com uma página de retrato (quando há imagem), uma de ficha (apelidos, situação, idade, altura, cargos, tags e descrição) e uma página para cada documento acessível no Atlas. Markdown e menções são convertidos para o Foundry.
 
-Importar de novo a mesma pessoa atualiza a entrada (pelo flag `atlas-foundry.personId`): as páginas do Atlas são trocadas e as páginas que você criou à mão ficam.
+Importar de novo a mesma pessoa atualiza a entrada (pelo flag `atlas-foundry.personId`): as páginas do Atlas são atualizadas mantendo seus identificadores e permissões; documentos que deixaram de vir do Atlas são removidos, e as páginas que você criou à mão ficam.
+
+## Documentos das pessoas
+
+A importação inclui automaticamente os documentos de cada pessoa, com título, subtítulo, texto, autoria, parâmetros e tags. Na ficha, a aba **Documentos** lista essas páginas e abre cada uma no diário padrão do Foundry. A aba **Páginas locais** continua reservada ao que foi criado na mesa.
+
+- Para trazer documentos de uma pessoa já importada, selecione-a e importe novamente.
+- O módulo consulta todas as páginas da API, usando o mesmo mundo/campanha e a mesma escolha de **Ver como** da pessoa. Importa apenas os documentos que essa visão pode consultar.
+- Documentos novos começam privados para o mestre. Como personagens do Atlas e usuários do Foundry têm identificadores diferentes, o compartilhamento é definido nas permissões de cada página pelo próprio Foundry. Reimportar preserva essas permissões e os UUIDs das páginas.
+- Se a leitura dos documentos falhar, aquela pessoa é contada como erro e sua entrada anterior não é modificada.
 
 Outros módulos e macros podem abrir a janela com `game.modules.get('atlas-foundry').api.openImporter()`.
 
 ## Ficha de pessoa Atlas
 
-As pessoas importadas abrem na ficha **Pessoa Atlas**, com retrato, apelidos, situação, idade, altura, cargos, tags e história. A organização segue as fichas do Foundry: cabeçalho compacto com retrato e informações rápidas, abas nativas de **Ficha**, **História** e **Páginas locais**, e conteúdo com rolagem própria. As abas também aceitam navegação por teclado (setas, Home e End). A ficha usa os dados já importados, sem precisar consultar a API ou ter o token do mestre para abrir.
+As pessoas importadas abrem na ficha **Pessoa Atlas**, com retrato, apelidos, situação, idade, altura, cargos, tags e história. A organização segue as fichas do Foundry: cabeçalho compacto com retrato e informações rápidas, abas nativas de **Ficha**, **História**, **Documentos** e **Páginas locais**, e conteúdo com rolagem própria. As abas também aceitam navegação por teclado (setas, Home e End). A ficha usa os dados já importados, sem precisar consultar a API ou ter o token do mestre para abrir.
 
 A identidade visual usa o tema padrão **Codex** do Atlas: pergaminho sutil, tons de tinta e couro, vermelho e dourado. A textura de papel vem do Atlas UI. As fontes originais (Cinzel Decorative, Cormorant SC e EB Garamond) estão incluídas no módulo com suas licenças, sem carregar Google Fonts durante o uso. As cores e fontes ficam isoladas na ficha, sem alterar o tema das outras janelas do Foundry. Esta versão usa a aparência padrão; não sincroniza os estilos ou paletas personalizados de cada mundo.
 

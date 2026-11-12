@@ -1,5 +1,6 @@
 import { buildPersonFlags, buildPersonPages, buildScopeKey, MODULE_ID, PERSON_SHEET_ID } from './person-journal.js';
 import { formatDropCapHtml } from './drop-cap.js';
+import { buildDocumentPages } from './document-journal.js';
 
 const findScopeFolder = (scope) =>
   game.folders.find(
@@ -31,8 +32,18 @@ const createMarkdownConverter = () => {
   return Converter ? new Converter({ tables: true, strikethrough: true, simpleLineBreaks: true }) : null;
 };
 
-export const writePersonEntry = async (person, scope, { folder, labels }) => {
-  const pages = buildPersonPages(person, { labels, converter: createMarkdownConverter() });
+const importedPageKey = (page) => {
+  const flags = page.flags?.[MODULE_ID];
+  if (!flags?.part) return null;
+  return flags.part === 'document' ? `document:${flags.documentId}` : flags.part;
+};
+
+export const writePersonEntry = async (person, scope, { folder, labels, documents = [] }) => {
+  const converter = createMarkdownConverter();
+  const pages = [
+    ...buildPersonPages(person, { labels, converter }),
+    ...buildDocumentPages(documents, { labels, converter }),
+  ];
   for (const page of pages) {
     if (page.type === 'text') page.text.content = formatDropCapHtml(page.text.content);
   }
@@ -47,20 +58,35 @@ export const writePersonEntry = async (person, scope, { folder, labels }) => {
   if (!existing.getFlag('core', 'sheetClass')) {
     flags.core = { sheetClass: PERSON_SHEET_ID };
   }
-  // A restricted profile or portrait must remain restricted after reimporting.
-  for (const page of pages) {
-    const previous = existing.pages.find((candidate) =>
-      candidate.getFlag(MODULE_ID, 'part') === page.flags[MODULE_ID].part,
-    );
-    if (previous?.ownership) page.ownership = structuredClone(previous.ownership);
+  const previousPages = new Map();
+  for (const previous of existing.pages) {
+    const part = previous.getFlag(MODULE_ID, 'part');
+    if (!part) continue;
+    const key = part === 'document' ? `document:${previous.getFlag(MODULE_ID, 'documentId')}` : part;
+    previousPages.set(key, previous);
   }
-  await existing.update({ name: person.name, flags });
+  const updates = [];
+  const additions = [];
+  const retainedIds = new Set();
+  // Update imported pages in place, retaining UUIDs and each page's permissions.
+  for (const page of pages) {
+    const previous = previousPages.get(importedPageKey(page));
+    if (!previous) {
+      additions.push(page);
+      continue;
+    }
+    if (previous.ownership) page.ownership = structuredClone(previous.ownership);
+    updates.push({ ...page, _id: previous.id });
+    retainedIds.add(previous.id);
+  }
   const oldPageIds = existing.pages
-    .filter((page) => page.getFlag(MODULE_ID, 'part'))
+    .filter((page) => page.getFlag(MODULE_ID, 'part') && !retainedIds.has(page.id))
     .map((page) => page.id);
+  await existing.update({ name: person.name, flags });
+  if (updates.length) await existing.updateEmbeddedDocuments('JournalEntryPage', updates);
+  if (additions.length) await existing.createEmbeddedDocuments('JournalEntryPage', additions);
   if (oldPageIds.length > 0) {
     await existing.deleteEmbeddedDocuments('JournalEntryPage', oldPageIds);
   }
-  await existing.createEmbeddedDocuments('JournalEntryPage', pages);
   return 'updated';
 };

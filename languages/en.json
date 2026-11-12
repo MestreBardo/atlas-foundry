@@ -54,7 +54,8 @@
         "imprisoned": "Imprisoned",
         "exiled": "Exiled",
         "unknown": "Unknown"
-      }
+      },
+      "Author": "Author"
     },
     "Sheet": {
       "Title": "Atlas Person",
@@ -64,7 +65,10 @@
       "LocalPages": "Local pages",
       "NoDescription": "No history recorded.",
       "Details": "Details",
-      "NoLocalPages": "No local pages. Use Open journal to access the Foundry journal."
+      "NoLocalPages": "No local pages. Use Open journal to access the Foundry journal.",
+      "Documents": "Documents",
+      "NoDocuments": "No imported documents. Reimport the person to include the documents available in Atlas.",
+      "DocumentsSharing": "Manage sharing for each document in Open journal."
     }
   }
 }

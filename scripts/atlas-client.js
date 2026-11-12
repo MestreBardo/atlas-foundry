@@ -64,6 +64,12 @@ export class AtlasClient {
     return this.getAll(`${scopePath(scope)}/persons`, { adventurerId: scope.adventurerId });
   }
 
+  listPersonDocuments(scope, personId) {
+    return this.getAll(`${scopePath(scope)}/persons/${encodeURIComponent(personId)}/documents`, {
+      adventurerId: scope.adventurerId,
+    });
+  }
+
   async findPerson(scope, personId) {
     const body = await this.get(`${scopePath(scope)}/persons/${encodeURIComponent(personId)}`, {
       adventurerId: scope.adventurerId,

@@ -20,6 +20,7 @@ export class AtlasPersonSheet extends HandlebarsApplicationMixin(DocumentSheetV2
       tabs: [
         { id: 'details', label: 'ATLAS.Sheet.Details', icon: 'fa-solid fa-address-card' },
         { id: 'biography', label: 'ATLAS.Sheet.History', icon: 'fa-solid fa-feather-pointed' },
+        { id: 'documents', label: 'ATLAS.Sheet.Documents', icon: 'fa-solid fa-file-lines' },
         { id: 'notes', label: 'ATLAS.Sheet.LocalPages', icon: 'fa-regular fa-file-lines' },
       ],
     },
@@ -57,7 +58,8 @@ export class AtlasPersonSheet extends HandlebarsApplicationMixin(DocumentSheetV2
       secrets: this.document.isOwner,
       relativeTo: this.document,
     });
-    const available = person.hasProfile ? ['details', 'biography', 'notes'] : canObserve ? ['notes'] : [];
+    const available = person.hasProfile ? ['details', 'biography', 'documents', 'notes']
+      : canObserve ? [...(person.documents.length ? ['documents'] : []), 'notes'] : [];
     if (!available.includes(this.tabGroups.primary)) {
       this.tabGroups.primary = available.includes('biography') ? 'biography' : available[0] ?? null;
     }
@@ -105,6 +107,9 @@ export class AtlasPersonSheet extends HandlebarsApplicationMixin(DocumentSheetV2
   static #onOpenJournal(_event, target) {
     if (!this.document.testUserPermission(game.user, 'OBSERVER')) return;
     const pageId = target.dataset.pageId;
+    if (pageId && !this.document.pages.find((page) =>
+      page.id === pageId && page.testUserPermission(game.user, 'OBSERVER'),
+    )) return;
     const sheet = new foundry.applications.sheets.journal.JournalEntrySheet({ document: this.document });
     return sheet.render({ force: true, ...(pageId ? { pageId } : {}) });
   }

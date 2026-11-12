@@ -317,6 +317,15 @@
 .atlas-person-sheet .atlas-sheet-pages button { display: flex; align-items: center; gap: 0.75rem; width: 100%; margin: 0; padding: 0.65rem 0.5rem; border: 0; border-radius: 0; background: transparent; text-align: left; }
 .atlas-person-sheet .atlas-sheet-pages button span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .atlas-person-sheet .atlas-sheet-pages button i:last-child { font-size: 0.7rem; opacity: 0.65; }
+.atlas-person-sheet .atlas-document-summary { display: block; color: var(--atlas-ink-500); font: italic 0.9rem/1.4 var(--atlas-font-body); }
+.atlas-document { font-family: 'Atlas Foundry EB Garamond', Georgia, serif; line-height: 1.6; overflow-wrap: anywhere; }
+.atlas-document .atlas-document-subtitle { font-style: italic; }
+.atlas-document .atlas-document-parameters { margin: 1rem 0; }
+.atlas-document .atlas-document-parameters > div { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.atlas-document .atlas-document-parameters dt { font-weight: 600; }
+.atlas-document .atlas-document-parameters dd { margin: 0; }
+.atlas-document .atlas-document-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0; list-style: none; }
+.atlas-document .atlas-document-tags li { padding: 0.1rem 0.5rem; border: 1px solid currentColor; border-radius: 3px; font-size: 0.9em; }
 .atlas-person-sheet .atlas-sheet-footer { flex: 0 0 auto; padding: 0.3rem 1rem; border-top: 1px solid #8a642033; color: var(--atlas-ink-500); font: 600 0.75rem/1.4 var(--atlas-font-heading); text-align: right; }
 
 @container (max-width: 520px) {
