@@ -27,6 +27,8 @@ As pessoas importadas abrem na ficha **Pessoa Atlas**, com retrato, apelidos, si
 
 A identidade visual usa o tema padrão **Codex** do Atlas: pergaminho sutil, tons de tinta e couro, vermelho e dourado. A textura de papel vem do Atlas UI. As fontes originais (Cinzel Decorative, Cormorant SC e EB Garamond) estão incluídas no módulo com suas licenças, sem carregar Google Fonts durante o uso. As cores e fontes ficam isoladas na ficha, sem alterar o tema das outras janelas do Foundry. Esta versão usa a aparência padrão; não sincroniza os estilos ou paletas personalizados de cada mundo.
 
+Parágrafos iniciados por `{capitular} ` exibem a primeira letra ampliada, como no Atlas. O marcador não aparece na ficha, inclusive em entradas já importadas. Nas novas importações, a formatação também é salva na página para funcionar no diário padrão do Foundry.
+
 - Para entradas importadas antes desta versão, importe a pessoa novamente ou escolha **Pessoa Atlas** em **Configurar ficha** no menu da entrada.
 - **Abrir diário** abre a interface padrão do Foundry para editar e criar páginas. As páginas locais também aparecem como atalhos na aba **Páginas locais** e continuam preservadas nas reimportações.
 - A reimportação atualiza os dados vindos do Atlas. Uma ficha alternativa escolhida manualmente é preservada.

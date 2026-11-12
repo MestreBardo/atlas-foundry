@@ -296,6 +296,21 @@
 .atlas-person-sheet .atlas-sheet-prose blockquote { margin-inline: 0; padding-left: 1rem; border-left: 3px solid var(--atlas-gold-500); font-style: italic; color: var(--atlas-ink-700); }
 .atlas-person-sheet .atlas-sheet-prose table { display: block; max-width: 100%; overflow-x: auto; }
 .atlas-person-sheet .atlas-sheet-prose pre { max-width: 100%; overflow-x: auto; }
+
+/* Shared by the Atlas sheet and the imported page in Foundry's native journal. */
+.atlas-person-sheet .atlas-sheet-prose p.atlas-drop-cap,
+.atlas-person-description p.atlas-drop-cap { display: flow-root; }
+.atlas-person-sheet .atlas-sheet-prose p.atlas-drop-cap::first-letter,
+.atlas-person-description p.atlas-drop-cap::first-letter {
+  float: left;
+  padding-right: 0.5rem;
+  color: var(--atlas-rubric-700, #712419);
+  font-family: var(--atlas-font-heading, 'Atlas Foundry Cormorant SC'), Georgia, serif;
+  font-size: 3.5em;
+  font-weight: 600;
+  line-height: 0.85;
+  text-transform: uppercase;
+}
 .atlas-person-sheet .atlas-sheet-empty { color: var(--atlas-ink-500); font-style: italic; }
 .atlas-person-sheet .atlas-sheet-pages { margin: 0; padding: 0; list-style: none; }
 .atlas-person-sheet .atlas-sheet-pages li { border-bottom: 1px solid #8a642033; }

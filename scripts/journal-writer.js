@@ -1,4 +1,5 @@
 import { buildPersonFlags, buildPersonPages, buildScopeKey, MODULE_ID, PERSON_SHEET_ID } from './person-journal.js';
+import { formatDropCapHtml } from './drop-cap.js';
 
 const findScopeFolder = (scope) =>
   game.folders.find(
@@ -32,6 +33,9 @@ const createMarkdownConverter = () => {
 
 export const writePersonEntry = async (person, scope, { folder, labels }) => {
   const pages = buildPersonPages(person, { labels, converter: createMarkdownConverter() });
+  for (const page of pages) {
+    if (page.type === 'text') page.text.content = formatDropCapHtml(page.text.content);
+  }
   const flags = buildPersonFlags(person, scope);
   const existing = findImportedEntry(person, scope);
   if (!existing) {

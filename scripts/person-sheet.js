@@ -1,5 +1,6 @@
 import { MODULE_ID } from './person-journal.js';
 import { buildPersonSheetData } from './person-sheet-data.js';
+import { formatDropCapHtml } from './drop-cap.js';
 
 const { DocumentSheetV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -51,7 +52,8 @@ export class AtlasPersonSheet extends HandlebarsApplicationMixin(DocumentSheetV2
     // Read from the native HTML field, sanitized by Foundry when the page is saved.
     const html = new DOMParser().parseFromString(person.profileHtml, 'text/html');
     const description = html.querySelector('.atlas-person-description');
-    person.descriptionHtml = await foundry.applications.ux.TextEditor.enrichHTML(description?.innerHTML ?? person.profileHtml, {
+    const descriptionHtml = formatDropCapHtml(description?.innerHTML ?? person.profileHtml);
+    person.descriptionHtml = await foundry.applications.ux.TextEditor.enrichHTML(descriptionHtml, {
       secrets: this.document.isOwner,
       relativeTo: this.document,
     });
