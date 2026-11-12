@@ -1,0 +1,83 @@
+/* Atlas UI default Codex theme, adapted with a module-specific namespace.
+ * Source: MestreBardo/atlas-ui, src/styles.css and src/index.html.
+ * Fonts are bundled under SIL Open Font License; see assets/fonts/*-OFL.txt.
+ */
+@font-face {
+  font-family: 'Atlas Foundry Cinzel Decorative';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(../assets/fonts/cinzel-decorative-normal-900.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Atlas Foundry Cormorant SC';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(../assets/fonts/cormorant-sc-normal-600.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Atlas Foundry Cormorant SC';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(../assets/fonts/cormorant-sc-normal-700.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Atlas Foundry EB Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../assets/fonts/eb-garamond-italic-400.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Atlas Foundry EB Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../assets/fonts/eb-garamond-normal-400.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Atlas Foundry EB Garamond';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(../assets/fonts/eb-garamond-normal-600.ttf) format('truetype');
+}
+
+.atlas-person-sheet {
+  --atlas-font-display: 'Atlas Foundry Cinzel Decorative', serif;
+  --atlas-font-heading: 'Atlas Foundry Cormorant SC', Georgia, serif;
+  --atlas-font-body: 'Atlas Foundry EB Garamond', Georgia, serif;
+  --atlas-vellum-50: #f6ecd2;
+  --atlas-vellum-100: #eddcb7;
+  --atlas-ink-900: #2c1f15;
+  --atlas-ink-700: #3d2a1b;
+  --atlas-ink-500: #654d34;
+  --atlas-rubric-600: #8e2c20;
+  --atlas-rubric-700: #712419;
+  --atlas-rubric-800: #561a12;
+  --atlas-gold-300: #ecd08a;
+  --atlas-gold-500: #c4973a;
+  --atlas-gold-600: color-mix(in srgb, #c4973a 50%, #8a6420);
+  --atlas-gold-700: #8a6420;
+  --atlas-leather-900: #1f120c;
+  --atlas-menu-text: #dcc796;
+  --atlas-heading-accent: #7a2218;
+  --atlas-paper-texture: url('../assets/textures/paper-noise.webp');
+  --atlas-paper-shading: radial-gradient(
+    ellipse at center,
+    transparent 45%,
+    color-mix(in srgb, rgb(110 70 25) 16%, transparent) 100%
+  );
+  --atlas-leather-shading: radial-gradient(
+    ellipse at 50% 20%,
+    color-mix(in srgb, rgb(150 80 40) 22%, transparent),
+    transparent 70%
+  );
+}

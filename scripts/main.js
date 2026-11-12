@@ -1,6 +1,7 @@
 import { AtlasImporterApplication } from './importer-application.js';
 import { MODULE_ID } from './person-journal.js';
 import { registerSettings } from './settings.js';
+import { registerPersonSheet } from './person-sheet.js';
 
 let importer = null;
 
@@ -11,6 +12,7 @@ const openImporter = () => {
 
 Hooks.once('init', () => {
   registerSettings();
+  registerPersonSheet();
   game.modules.get(MODULE_ID).api = { openImporter };
 });
 

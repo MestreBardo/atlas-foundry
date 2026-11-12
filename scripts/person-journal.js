@@ -1,4 +1,5 @@
 export const MODULE_ID = 'atlas-foundry';
+export const PERSON_SHEET_ID = `${MODULE_ID}.AtlasPersonSheet`;
 
 const MENTION_PATTERN =
   /@\[([^\]\n]+)\]\((?:person|place|faction|entry|adventurer|quest|event|map|house):[0-9a-f]{24}\)/g;
@@ -66,9 +67,22 @@ export const buildPersonPages = (person, { labels, converter = null }) => {
     type: 'text',
     text: {
       format: 1,
-      content: `${buildFactsHtml(person, labels)}${markdownToHtml(description, converter)}`,
+      content: `${buildFactsHtml(person, labels)}<div class="atlas-person-description">${markdownToHtml(description, converter)}</div>`,
     },
-    flags: { [MODULE_ID]: { part: 'profile' } },
+    flags: {
+      [MODULE_ID]: {
+        part: 'profile',
+        // Keep the snapshot on the page so page ownership also protects its facts.
+        person: {
+          nicknames: person.nicknames ?? [],
+          status: person.status ?? '',
+          age: person.age ?? '',
+          height: person.height ?? '',
+          positions: (person.positions ?? []).map(({ levelName, ownerName }) => ({ levelName, ownerName })),
+          tags: person.tags ?? [],
+        },
+      },
+    },
   });
   return pages;
 };
@@ -78,6 +92,7 @@ export const buildPersonFlags = (person, scope) => ({
     personId: person.id,
     scopeType: scope.type,
     scopeId: scope.id,
+    scopeName: scope.name,
     importedAt: new Date().toISOString(),
   },
 });

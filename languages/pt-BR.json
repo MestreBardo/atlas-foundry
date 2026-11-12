@@ -55,6 +55,14 @@
         "exiled": "Exilada",
         "unknown": "Desconhecida"
       }
+    },
+    "Sheet": {
+      "Title": "Pessoa Atlas",
+      "Person": "Pessoa",
+      "OpenJournal": "Abrir diário",
+      "History": "História",
+      "LocalPages": "Páginas locais",
+      "NoDescription": "Nenhuma história registrada."
     }
   }
 }

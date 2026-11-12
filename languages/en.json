@@ -55,6 +55,14 @@
         "exiled": "Exiled",
         "unknown": "Unknown"
       }
+    },
+    "Sheet": {
+      "Title": "Atlas Person",
+      "Person": "Person",
+      "OpenJournal": "Open journal",
+      "History": "History",
+      "LocalPages": "Local pages",
+      "NoDescription": "No history recorded."
     }
   }
 }

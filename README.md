@@ -21,8 +21,20 @@ Importar de novo a mesma pessoa atualiza a entrada (pelo flag `atlas-foundry.per
 
 Outros módulos e macros podem abrir a janela com `game.modules.get('atlas-foundry').api.openImporter()`.
 
+## Ficha de pessoa Atlas
+
+As pessoas importadas abrem na ficha **Pessoa Atlas**, com retrato, apelidos, situação, idade, altura, cargos, tags e história. O visual segue o tema padrão **Codex** do Atlas: livro aberto, papel de pergaminho, moldura dourada, couro escuro e detalhes em vermelho. A ficha usa os dados já importados, sem precisar consultar a API ou ter o token do mestre para abrir.
+
+O logotipo e a textura de papel vêm do Atlas UI. As fontes originais (Cinzel Decorative, Cormorant SC e EB Garamond) estão incluídas no módulo com suas licenças, sem carregar Google Fonts durante o uso. As cores e fontes ficam isoladas na ficha, sem alterar o tema das outras janelas do Foundry. Esta versão usa a aparência padrão; não sincroniza os estilos ou paletas personalizados de cada mundo.
+
+- Para entradas importadas antes desta versão, importe a pessoa novamente ou escolha **Pessoa Atlas** em **Configurar ficha** no menu da entrada.
+- **Abrir diário** abre a interface padrão do Foundry para editar e criar páginas. As páginas locais também aparecem como atalhos no dossiê e continuam preservadas nas reimportações.
+- A reimportação atualiza os dados vindos do Atlas. Uma ficha alternativa escolhida manualmente é preservada.
+- O compartilhamento continua pelas permissões de entrada e página do Foundry. Leitores com acesso limitado veem apenas a identidade e o retrato permitido; a ficha completa exige acesso de observador. O módulo não cria Actors nem depende de um sistema de regras.
+
 ## Desenvolvimento
 
 - JavaScript puro em ES modules, sem build. `scripts/main.js` registra configurações e o botão; `importer-application.js` é a janela (ApplicationV2 + Handlebars); `atlas-client.js` fala com a API; `person-journal.js` monta as páginas; `journal-writer.js` cria ou atualiza as entradas.
+- `person-sheet.js` registra uma DocumentSheetV2 para JournalEntry; `person-sheet-data.js` monta a ficha apenas com as páginas autorizadas; `templates/person-sheet.hbs`, `styles/atlas-theme.css` e `styles/atlas.css` definem seu visual. A origem dos elementos do tema está em `assets/README.md`.
 - `npm test` roda os testes do cliente e da montagem das páginas (`node --test`, sem dependências).
 - A API aceita o token pessoal (`atlas_pat_…`) só em `GET` e libera CORS sem credenciais para qualquer origem, então o Foundry pode estar em qualquer endereço.

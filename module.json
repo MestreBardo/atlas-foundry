@@ -16,6 +16,7 @@
     "scripts/main.js"
   ],
   "styles": [
+    "styles/atlas-theme.css",
     "styles/atlas.css"
   ],
   "languages": [

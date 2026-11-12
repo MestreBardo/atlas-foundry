@@ -1,0 +1,73 @@
+<article class="atlas-dossier">
+  <header class="atlas-dossier-masthead">
+    <img class="atlas-wordmark" src="modules/atlas-foundry/assets/images/logo.webp" alt="Atlas">
+    {{#if person.scopeName}}<span class="atlas-dossier-scope">{{person.scopeName}}</span>{{/if}}
+    {{#if canObserve}}
+    <button type="button" data-action="openJournal"><i class="fa-solid fa-book-open" inert></i> {{localize "ATLAS.Sheet.OpenJournal"}}</button>
+    {{/if}}
+  </header>
+
+  <div class="atlas-dossier-layout">
+    <aside class="atlas-dossier-sidebar">
+      <header class="atlas-dossier-identity">
+        <h1>{{person.name}}</h1>
+        {{#if person.nicknames}}<p class="atlas-dossier-aliases">{{person.nicknames}}</p>{{/if}}
+      </header>
+      <div class="atlas-dossier-portrait">
+        <span class="atlas-portrait-corner atlas-portrait-corner-tl" aria-hidden="true"></span>
+        <span class="atlas-portrait-corner atlas-portrait-corner-tr" aria-hidden="true"></span>
+        <span class="atlas-portrait-corner atlas-portrait-corner-bl" aria-hidden="true"></span>
+        <span class="atlas-portrait-corner atlas-portrait-corner-br" aria-hidden="true"></span>
+        <div class="atlas-dossier-picture">
+        {{#if person.portrait}}
+        <img src="{{person.portrait}}" alt="{{person.name}}">
+        {{else}}
+        <span class="atlas-dossier-initial" aria-hidden="true">{{person.initial}}</span>
+        {{/if}}
+        </div>
+      </div>
+      <footer class="atlas-dossier-person-label">
+        <span><i class="fa-solid fa-user" inert></i> {{localize "ATLAS.Sheet.Person"}}</span>
+        {{#if person.hasProfile}}
+        {{#if person.statusLabel}}<span class="atlas-dossier-status" title="{{localize 'ATLAS.Journal.Status'}}">{{person.statusLabel}}</span>{{/if}}
+        {{/if}}
+      </footer>
+    </aside>
+
+    <div class="atlas-dossier-main">
+      {{#if person.hasProfile}}
+      {{#if person.facts.length}}
+      <dl class="atlas-dossier-facts">
+        {{#each person.facts}}<div><dt>{{localize label}}</dt><dd>{{value}}</dd></div>{{/each}}
+      </dl>
+      {{/if}}
+      {{#if person.positions.length}}
+      <section class="atlas-dossier-positions">
+        <h2>{{localize "ATLAS.Journal.Positions"}}</h2>
+        <ul>{{#each person.positions}}<li>{{this}}</li>{{/each}}</ul>
+      </section>
+      {{/if}}
+      <section class="atlas-dossier-history">
+        <h2>{{localize "ATLAS.Sheet.History"}}</h2>
+        {{#if person.descriptionHtml}}<div class="atlas-dossier-prose">{{{person.descriptionHtml}}}</div>
+        {{else}}<p class="atlas-dossier-empty">{{localize "ATLAS.Sheet.NoDescription"}}</p>{{/if}}
+      </section>
+      {{/if}}
+      {{#if person.localPages.length}}
+      <section class="atlas-dossier-notes">
+        <h2>{{localize "ATLAS.Sheet.LocalPages"}}</h2>
+        {{#each person.localPages}}
+        <button type="button" data-action="openJournal" data-page-id="{{id}}"><i class="fa-regular fa-file-lines" inert></i> {{name}}</button>
+        {{/each}}
+      </section>
+      {{/if}}
+      {{#if person.hasProfile}}
+      {{#if person.tags.length}}
+      <footer class="atlas-dossier-tag-footer">
+        <ul class="atlas-dossier-tags" aria-label="{{localize 'ATLAS.Journal.Tags'}}">{{#each person.tags}}<li>{{this}}</li>{{/each}}</ul>
+      </footer>
+      {{/if}}
+      {{/if}}
+    </div>
+  </div>
+</article>

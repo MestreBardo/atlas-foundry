@@ -124,3 +124,307 @@
 .atlas-person-facts {
   padding-left: 1.25rem;
 }
+
+/* Book layout adapted from Atlas UI's book-modal, cover-frame and tag-chip. */
+.atlas-person-sheet {
+  color-scheme: light;
+  color: var(--atlas-ink-900);
+  font-family: var(--atlas-font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  border: 1px solid var(--atlas-gold-600);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.atlas-person-sheet .window-header {
+  background: var(--atlas-leather-900);
+  color: var(--atlas-menu-text);
+  border-bottom: 1px solid var(--atlas-gold-600);
+  font-family: var(--atlas-font-heading);
+}
+
+.atlas-person-sheet .window-content {
+  padding: 0;
+  overflow: hidden;
+  color: var(--atlas-ink-900);
+  background: var(--atlas-leather-900);
+}
+
+.atlas-person-sheet .atlas-dossier {
+  height: 100%;
+  overflow: auto;
+  container-type: inline-size;
+  background-color: var(--atlas-vellum-100);
+  background-image: var(--atlas-paper-shading), var(--atlas-paper-texture);
+  scrollbar-color: var(--atlas-gold-700) transparent;
+}
+
+.atlas-person-sheet .atlas-dossier-masthead {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 64px;
+  padding: 0.5rem 1.5rem;
+  border-bottom: 1px solid var(--atlas-gold-600);
+  background-color: var(--atlas-leather-900);
+  background-image: var(--atlas-leather-shading), var(--atlas-paper-texture);
+  color: var(--atlas-menu-text);
+}
+
+.atlas-person-sheet .atlas-wordmark {
+  width: 90px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 0;
+  object-fit: contain;
+}
+
+.atlas-person-sheet .atlas-dossier-scope {
+  min-width: 0;
+  font-family: var(--atlas-font-heading);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  overflow-wrap: anywhere;
+}
+
+.atlas-person-sheet button {
+  width: auto;
+  height: auto;
+  min-height: 2rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--atlas-gold-600);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--atlas-ink-900);
+  font: 600 1rem/1.4 var(--atlas-font-heading);
+  letter-spacing: 0.04em;
+  white-space: normal;
+  cursor: pointer;
+  transition: border-color 200ms, color 200ms;
+}
+
+.atlas-person-sheet button:hover {
+  border-color: var(--atlas-rubric-700);
+  color: var(--atlas-rubric-700);
+  text-shadow: none;
+}
+
+.atlas-person-sheet button:focus-visible {
+  outline: 2px solid var(--atlas-rubric-700);
+  outline-offset: 3px;
+}
+
+.atlas-person-sheet .atlas-dossier-masthead button {
+  flex: 0 0 auto;
+  margin-left: auto;
+  border-color: var(--atlas-gold-500);
+  background: linear-gradient(to bottom, var(--atlas-rubric-600), var(--atlas-rubric-800));
+  box-shadow: 0 3px 10px #32190847;
+  color: var(--atlas-vellum-50);
+}
+
+.atlas-person-sheet .atlas-dossier-masthead button:hover { filter: brightness(1.08); }
+.atlas-person-sheet .atlas-dossier-masthead button:focus-visible { outline-color: var(--atlas-gold-300); }
+
+.atlas-person-sheet .atlas-dossier-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: calc(100% - 65px);
+}
+
+.atlas-person-sheet .atlas-dossier-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  min-width: 0;
+  padding: 1.8rem 2rem;
+  border-right: 1px solid #8a642055;
+  background-image:
+    linear-gradient(to left, #32190845, transparent 12%),
+    var(--atlas-paper-shading), var(--atlas-paper-texture);
+}
+
+.atlas-person-sheet .atlas-dossier-identity { text-align: center; }
+
+.atlas-person-sheet .atlas-dossier-identity h1 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--atlas-heading-accent);
+  font: 600 clamp(1.8rem, 4cqi, 2.4rem)/1.1 var(--atlas-font-heading);
+  letter-spacing: 0.025em;
+  overflow-wrap: anywhere;
+  text-shadow: none;
+}
+
+.atlas-person-sheet .atlas-dossier-aliases {
+  margin: 0.6rem 0 0;
+  color: var(--atlas-ink-700);
+  font: italic 1.1rem/1.4 var(--atlas-font-body);
+}
+
+.atlas-person-sheet .atlas-dossier-portrait {
+  position: relative;
+  flex: 1 0 auto;
+  min-height: 260px;
+  padding: 7px;
+  border: 1.5px solid var(--atlas-gold-600);
+  border-radius: 0;
+  background: #eddcb780;
+  box-shadow: 0 10px 26px #46280f38;
+}
+
+.atlas-person-sheet .atlas-dossier-portrait::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid #a77e2d99;
+  pointer-events: none;
+}
+
+.atlas-person-sheet .atlas-dossier-picture {
+  display: grid;
+  place-items: center;
+  position: relative;
+  height: 100%;
+  min-height: 260px;
+  overflow: hidden;
+  background-color: var(--atlas-vellum-50);
+  background-image: var(--atlas-paper-shading), var(--atlas-paper-texture);
+}
+
+.atlas-person-sheet .atlas-dossier-picture img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+  border-radius: 0;
+}
+
+.atlas-person-sheet .atlas-portrait-corner {
+  position: absolute;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border: 0 solid var(--atlas-gold-600);
+  pointer-events: none;
+}
+
+.atlas-person-sheet .atlas-portrait-corner-tl { top: -3px; left: -3px; border-top-width: 2.5px; border-left-width: 2.5px; }
+.atlas-person-sheet .atlas-portrait-corner-tr { top: -3px; right: -3px; border-top-width: 2.5px; border-right-width: 2.5px; }
+.atlas-person-sheet .atlas-portrait-corner-bl { bottom: -3px; left: -3px; border-bottom-width: 2.5px; border-left-width: 2.5px; }
+.atlas-person-sheet .atlas-portrait-corner-br { bottom: -3px; right: -3px; border-bottom-width: 2.5px; border-right-width: 2.5px; }
+
+.atlas-person-sheet .atlas-dossier-initial {
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 150px;
+  border: 3px double var(--atlas-gold-600);
+  color: var(--atlas-gold-700);
+  font: 900 5rem/1 var(--atlas-font-display);
+}
+
+.atlas-person-sheet .atlas-dossier-person-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--atlas-ink-700);
+  font: 600 1rem/1.4 var(--atlas-font-heading);
+  letter-spacing: 0.08em;
+}
+
+.atlas-person-sheet .atlas-dossier-person-label i { color: var(--atlas-rubric-700); }
+
+.atlas-person-sheet .atlas-dossier-status {
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--atlas-gold-600);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+}
+
+.atlas-person-sheet .atlas-dossier-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 2rem 2.4rem;
+  background-image:
+    linear-gradient(to right, #32190825, transparent 12%),
+    var(--atlas-paper-shading), var(--atlas-paper-texture);
+}
+
+.atlas-person-sheet .atlas-dossier-facts { margin: 0 0 1.25rem; }
+.atlas-person-sheet .atlas-dossier-facts > div { display: flex; align-items: baseline; gap: 0.5rem; margin: 0.25rem 0; }
+.atlas-person-sheet .atlas-dossier-facts > div::before {
+  content: '';
+  align-self: center;
+  flex: 0 0 6px;
+  height: 6px;
+  margin-right: 0.15rem;
+  background: var(--atlas-rubric-700);
+  transform: rotate(45deg);
+}
+.atlas-person-sheet dt { color: var(--atlas-ink-700); font-family: var(--atlas-font-heading); letter-spacing: 0.04em; }
+.atlas-person-sheet dd { margin: 0; color: var(--atlas-ink-700); overflow-wrap: anywhere; }
+
+.atlas-person-sheet .atlas-dossier-main h2 {
+  margin: 0 0 0.6rem;
+  padding: 0;
+  border: 0;
+  color: var(--atlas-heading-accent);
+  font: 600 1.8rem/1.2 var(--atlas-font-heading);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  text-shadow: none;
+}
+
+.atlas-person-sheet .atlas-dossier-positions { margin-bottom: 1.5rem; }
+.atlas-person-sheet .atlas-dossier-positions ul { margin: 0; padding: 0; list-style: none; }
+.atlas-person-sheet .atlas-dossier-prose { font: 1.1rem/1.55 var(--atlas-font-body); overflow-wrap: anywhere; }
+.atlas-person-sheet .atlas-dossier-prose > :first-child { margin-top: 0; }
+.atlas-person-sheet .atlas-dossier-prose > :last-child { margin-bottom: 0; }
+.atlas-person-sheet .atlas-dossier-prose img { max-width: 100%; height: auto; }
+.atlas-person-sheet .atlas-dossier-prose a { color: var(--atlas-rubric-700); }
+.atlas-person-sheet .atlas-dossier-prose h1,
+.atlas-person-sheet .atlas-dossier-prose h2,
+.atlas-person-sheet .atlas-dossier-prose h3 { margin: 1rem 0 0.5rem; font-family: var(--atlas-font-heading); color: var(--atlas-heading-accent); text-shadow: none; }
+.atlas-person-sheet .atlas-dossier-prose blockquote { margin-inline: 0; padding-left: 1rem; border-left: 4px solid var(--atlas-gold-500); font-style: italic; color: var(--atlas-ink-700); }
+.atlas-person-sheet .atlas-dossier-prose table { display: block; max-width: 100%; overflow-x: auto; }
+.atlas-person-sheet .atlas-dossier-prose pre { max-width: 100%; overflow-x: auto; }
+.atlas-person-sheet .atlas-dossier-empty { color: var(--atlas-ink-500); font-style: italic; }
+
+.atlas-person-sheet .atlas-dossier-notes { margin: 1.5rem 0; }
+.atlas-person-sheet .atlas-dossier-notes button { display: block; margin: 0.4rem 0; text-align: left; }
+.atlas-person-sheet .atlas-dossier-tag-footer { margin-top: auto; padding-top: 1.5rem; }
+.atlas-person-sheet .atlas-dossier-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.atlas-person-sheet .atlas-dossier-tags li {
+  padding: 0.125rem 0.75rem;
+  border: 1px solid #a77e2d99;
+  border-radius: 999px;
+  background: #ecd08a33;
+  color: var(--atlas-ink-700);
+  font: 600 0.9rem/1.4 var(--atlas-font-heading);
+  letter-spacing: 0.08em;
+  overflow-wrap: anywhere;
+}
+
+@container (max-width: 620px) {
+  .atlas-person-sheet .atlas-dossier-layout { grid-template-columns: minmax(0, 1fr); }
+  .atlas-person-sheet .atlas-dossier-masthead { gap: 0.5rem; padding-inline: 1rem; flex-wrap: wrap; }
+  .atlas-person-sheet .atlas-dossier-scope { flex: 1 1 100%; order: 3; padding-bottom: 0.25rem; }
+  .atlas-person-sheet .atlas-dossier-sidebar { padding: 1.5rem; border-right: 0; background-image: var(--atlas-paper-shading), var(--atlas-paper-texture); }
+  .atlas-person-sheet .atlas-dossier-main { padding: 0.5rem 1.5rem 1.5rem; background-image: var(--atlas-paper-shading), var(--atlas-paper-texture); }
+  .atlas-person-sheet .atlas-dossier-portrait { min-height: 320px; }
+  .atlas-person-sheet .atlas-dossier-identity h1 { font-size: 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-person-sheet button { transition: none; }
+}
