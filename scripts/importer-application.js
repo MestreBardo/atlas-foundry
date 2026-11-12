@@ -2,13 +2,14 @@ import { AtlasClient } from './atlas-client.js';
 import { ensureScopeFolder, writePersonEntry } from './journal-writer.js';
 import { MODULE_ID } from './person-journal.js';
 import { readConnection } from './settings.js';
+import { initializeLocalization, localize as atlasLocalize } from './localization.js';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 const PERSON_STATUSES = ['alive', 'dead', 'missing', 'imprisoned', 'exiled', 'unknown'];
 
 const localize = (key, data = null) =>
-  data ? game.i18n.format(`ATLAS.${key}`, data) : game.i18n.localize(`ATLAS.${key}`);
+  atlasLocalize(`ATLAS.${key}`, data);
 
 const describeError = (error) => {
   const code = error?.code ?? 'UNKNOWN';
@@ -71,9 +72,13 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
   #selectedPersonIds = new Set();
   #filter = '';
   #status = 'loading';
-  #errorMessage = '';
+  #error = null;
   #progress = { done: 0, total: 0 };
   #loadedScope = null;
+
+  get title() {
+    return localize('Importer.Title');
+  }
 
   get #client() {
     return new AtlasClient(readConnection());
@@ -101,6 +106,7 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
   }
 
   async _prepareContext() {
+    await initializeLocalization();
     const filter = this.#filter.trim().toLocaleLowerCase();
     const visiblePersons = this.#persons
       .filter((person) => filter === '' || person.name.toLocaleLowerCase().includes(filter))
@@ -117,7 +123,7 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
       status: this.#status,
       loading: this.#status === 'loading',
       importing: this.#status === 'importing',
-      errorMessage: this.#errorMessage,
+      errorMessage: this.#error ? describeError(this.#error) : '',
       progress: this.#progress,
       worlds: this.#worlds.map((world) => ({ ...world, selected: world.id === this.#selectedWorldId })),
       campaigns: this.#campaigns.map((campaign) => ({
@@ -200,14 +206,14 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
 
   async #run(action) {
     this.#status = 'loading';
-    this.#errorMessage = '';
+    this.#error = null;
     await this.render();
     try {
       await action();
       this.#status = 'ready';
     } catch (error) {
       this.#status = 'error';
-      this.#errorMessage = describeError(error);
+      this.#error = error;
     }
     await this.render();
   }
@@ -279,7 +285,7 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
       return;
     }
     this.#status = 'importing';
-    this.#errorMessage = '';
+    this.#error = null;
     this.#progress = { done: 0, total: personIds.length };
     await this.render();
     const counts = { created: 0, updated: 0, failed: 0 };
@@ -303,10 +309,10 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
         await this.render();
       }
     } catch (error) {
-      this.#errorMessage = describeError(error);
+      this.#error = error;
     }
     this.#selectedPersonIds.clear();
-    this.#status = this.#errorMessage ? 'error' : 'ready';
+    this.#status = this.#error ? 'error' : 'ready';
     await this.render();
     const message = localize('Importer.Done', counts);
     if (counts.failed > 0) {
@@ -322,7 +328,7 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
       return;
     }
     this.#status = 'ready';
-    this.#errorMessage = '';
+    this.#error = null;
     await this.render();
   }
 

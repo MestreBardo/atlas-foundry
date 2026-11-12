@@ -1,6 +1,7 @@
 import { MODULE_ID } from './person-journal.js';
 import { buildPersonSheetData } from './person-sheet-data.js';
 import { formatDropCapHtml } from './drop-cap.js';
+import { initializeLocalization, localize } from './localization.js';
 
 const { DocumentSheetV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -34,6 +35,7 @@ export class AtlasPersonSheet extends HandlebarsApplicationMixin(DocumentSheetV2
   };
 
   async _prepareContext(options) {
+    await initializeLocalization();
     const context = await super._prepareContext(options);
     const canObserve = this.document.testUserPermission(game.user, 'OBSERVER');
     const pages = this.document.pages.filter((page) =>
@@ -49,7 +51,8 @@ export class AtlasPersonSheet extends HandlebarsApplicationMixin(DocumentSheetV2
       person.scopeName = '';
     }
     const statusKey = `ATLAS.Journal.Statuses.${person.status}`;
-    person.statusLabel = game.i18n.has(statusKey) ? game.i18n.localize(statusKey) : person.status;
+    const translatedStatus = localize(statusKey);
+    person.statusLabel = translatedStatus === statusKey ? person.status : translatedStatus;
     // Read from the native HTML field, sanitized by Foundry when the page is saved.
     const html = new DOMParser().parseFromString(person.profileHtml, 'text/html');
     const description = html.querySelector('.atlas-person-description');

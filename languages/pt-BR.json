@@ -8,6 +8,11 @@
       "Token": {
         "Name": "Token pessoal do Atlas",
         "Hint": "Crie no Atlas em Perfil → Integrações e cole aqui. Fica só neste navegador e só lê os dados da sua conta."
+      },
+      "Language": {
+        "Name": "Idioma do Atlas",
+        "Hint": "Escolha o idioma do Atlas neste navegador ou siga o idioma do Foundry.",
+        "FollowFoundry": "Seguir o idioma do Foundry"
       }
     },
     "Importer": {
@@ -68,7 +73,8 @@
       "NoLocalPages": "Nenhuma página local. Use Abrir diário para acessar o diário do Foundry.",
       "Documents": "Documentos",
       "NoDocuments": "Nenhum documento importado. Reimporte a pessoa para trazer os documentos disponíveis no Atlas.",
-      "DocumentsSharing": "Gerencie o compartilhamento de cada documento em Abrir diário."
+      "DocumentsSharing": "Gerencie o compartilhamento de cada documento em Abrir diário.",
+      "NoDetails": "Nenhum cargo ou tag informado."
     }
   }
 }

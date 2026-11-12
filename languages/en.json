@@ -8,6 +8,11 @@
       "Token": {
         "Name": "Atlas personal token",
         "Hint": "Create it in Atlas under Profile → Integrations and paste it here. It stays in this browser only and can only read your account's data."
+      },
+      "Language": {
+        "Name": "Atlas language",
+        "Hint": "Choose the language for Atlas in this browser, or follow the Foundry language.",
+        "FollowFoundry": "Follow Foundry language"
       }
     },
     "Importer": {
@@ -68,7 +73,8 @@
       "NoLocalPages": "No local pages. Use Open journal to access the Foundry journal.",
       "Documents": "Documents",
       "NoDocuments": "No imported documents. Reimport the person to include the documents available in Atlas.",
-      "DocumentsSharing": "Manage sharing for each document in Open journal."
+      "DocumentsSharing": "Manage sharing for each document in Open journal.",
+      "NoDetails": "No positions or tags recorded."
     }
   }
 }

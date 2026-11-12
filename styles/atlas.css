@@ -276,10 +276,6 @@
   font: 600 1.15rem/1.25 var(--atlas-font-heading);
   text-shadow: none;
 }
-.atlas-person-sheet .atlas-sheet-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.65rem; margin: 0; }
-.atlas-person-sheet .atlas-sheet-facts > div { padding: 0.6rem 0.8rem; border: 1px solid #8a642033; border-radius: 3px; background: #eddcb740; }
-.atlas-person-sheet .atlas-sheet-facts dt { color: var(--atlas-ink-500); font: 600 0.85rem/1.4 var(--atlas-font-heading); }
-.atlas-person-sheet .atlas-sheet-facts dd { margin: 0.2rem 0 0; font-weight: 600; font-size: 1.15rem; overflow-wrap: anywhere; }
 .atlas-person-sheet .atlas-sheet-section { margin-top: 1.5rem; }
 .atlas-person-sheet .atlas-sheet-positions { margin: 0; padding: 0; list-style: none; }
 .atlas-person-sheet .atlas-sheet-positions li { display: flex; align-items: baseline; gap: 0.6rem; padding: 0.5rem 0; border-bottom: 1px solid #8a642029; overflow-wrap: anywhere; }
