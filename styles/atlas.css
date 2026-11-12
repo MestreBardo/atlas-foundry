@@ -126,7 +126,6 @@
 }
 
 /* Foundry sheet structure, with Atlas colors and typography. */
-.atlas-person-sheet { font-family: var(--atlas-font-body); }
 .atlas-person-sheet .window-header {
   background: var(--atlas-leather-900);
   color: var(--atlas-menu-text);
@@ -198,7 +197,8 @@
 .atlas-person-sheet .atlas-sheet-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem 0.9rem; margin-top: 0.65rem; font-size: 0.9rem; color: var(--atlas-ink-700); }
 .atlas-person-sheet .atlas-sheet-summary-label { margin-right: 0.25rem; color: var(--atlas-ink-500); font-family: var(--atlas-font-heading); }
 .atlas-person-sheet .atlas-sheet-status { padding: 0.05rem 0.45rem; border: 1px solid #71241944; border-radius: 3px; background: #7124190a; color: var(--atlas-rubric-700); font-family: var(--atlas-font-heading); }
-.atlas-person-sheet button {
+/* Native frame controls can carry icon classes on the button itself. */
+.atlas-person-sheet :where(.atlas-character) button {
   width: auto;
   height: auto;
   min-height: 30px;
@@ -212,8 +212,8 @@
   white-space: normal;
   cursor: pointer;
 }
-.atlas-person-sheet button:hover { border-color: var(--atlas-rubric-700); background-color: #7124190a; color: var(--atlas-rubric-700); text-shadow: none; }
-.atlas-person-sheet button:focus-visible { outline: 2px solid var(--atlas-rubric-700); outline-offset: 2px; }
+.atlas-person-sheet :where(.atlas-character) button:hover { border-color: var(--atlas-rubric-700); background-color: #7124190a; color: var(--atlas-rubric-700); text-shadow: none; }
+.atlas-person-sheet :where(.atlas-character) button:focus-visible { outline: 2px solid var(--atlas-rubric-700); outline-offset: 2px; }
 .atlas-person-sheet .atlas-journal-action { align-self: start; font-size: 0.85rem; }
 .atlas-person-sheet .atlas-sheet-tabs {
   display: flex;
