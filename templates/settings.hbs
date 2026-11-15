@@ -1,0 +1,67 @@
+<div class="atlas-importer-root">
+  <section class="atlas-importer-body atlas-settings-body">
+    {{#unless hasToken}}
+      <div class="atlas-notice">
+        <p>{{atlasLocalize "ATLAS.Settings.Source.NoToken"}}</p>
+        <button type="button" data-action="openConnectionSettings">{{atlasLocalize "ATLAS.Importer.OpenSettings"}}</button>
+      </div>
+    {{else}}
+      <fieldset class="atlas-scope" {{#if busy}}disabled{{/if}}>
+        <legend>{{atlasLocalize "ATLAS.Importer.Source"}}</legend>
+        <div class="form-group">
+          <label for="atlas-settings-world">{{atlasLocalize "ATLAS.Importer.World"}}</label>
+          <select id="atlas-settings-world" name="worldId">
+            <option value="">{{atlasLocalize "ATLAS.Importer.ChooseWorld"}}</option>
+            {{#each worlds}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+          </select>
+        </div>
+        {{#if hasWorld}}
+          <div class="form-group">
+            <label for="atlas-settings-campaign">{{atlasLocalize "ATLAS.Importer.Campaign"}}</label>
+            <select id="atlas-settings-campaign" name="campaignId">
+              <option value="">{{atlasLocalize "ATLAS.Importer.WorldItself"}}</option>
+              {{#each campaigns}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+            </select>
+          </div>
+          <p class="hint">{{atlasLocalize "ATLAS.Settings.Source.WorldHint"}}</p>
+        {{/if}}
+        {{#if hasCampaign}}
+          <div class="form-group">
+            <label for="atlas-settings-adventurer">{{atlasLocalize "ATLAS.Importer.ActAs"}}</label>
+            <select id="atlas-settings-adventurer" name="adventurerId">
+              <option value="">{{atlasLocalize "ATLAS.Importer.AsMaster"}}</option>
+              {{#each viewpoints}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+            </select>
+          </div>
+        {{/if}}
+      </fieldset>
+      {{#if hasCampaign}}
+        <fieldset class="atlas-scope" {{#if busy}}disabled{{/if}}>
+          <legend>{{atlasLocalize "ATLAS.Settings.Links.Name"}}</legend>
+          <p class="hint">{{atlasLocalize "ATLAS.Settings.Links.Hint"}}</p>
+          {{#each assignments}}
+            <div class="form-group">
+              <label for="atlas-actor-{{id}}">{{name}}</label>
+              <select id="atlas-actor-{{id}}" name="actor-{{id}}" data-adventurer-id="{{id}}">
+                <option value="">{{atlasLocalize "ATLAS.Settings.Links.Unassigned"}}</option>
+                {{#each actors}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+              </select>
+            </div>
+          {{else}}
+            <p class="atlas-empty">{{atlasLocalize "ATLAS.Settings.Links.Empty"}}</p>
+          {{/each}}
+        </fieldset>
+      {{/if}}
+      {{#if loading}}<p class="atlas-status">{{atlasLocalize "ATLAS.Importer.Loading"}}</p>{{/if}}
+      {{#if errorMessage}}
+        <div class="atlas-error" role="alert">
+          <p>{{errorMessage}}</p>
+          <button type="button" data-action="retry" {{#if busy}}disabled{{/if}}>{{atlasLocalize "ATLAS.Importer.Retry"}}</button>
+        </div>
+      {{/if}}
+    {{/unless}}
+  </section>
+  <footer class="atlas-importer-footer">
+    <button type="submit" {{#unless canSave}}disabled{{/unless}}><i class="fa-solid fa-floppy-disk" inert></i> {{atlasLocalize "ATLAS.Settings.Source.Save"}}</button>
+  </footer>
+</div>

@@ -8,43 +8,19 @@
         </button>
       </div>
     {{else}}
-      <fieldset class="atlas-scope" {{#if importing}}disabled{{/if}}>
-        <legend>{{atlasLocalize "ATLAS.Importer.Source"}}</legend>
-        <div class="form-group">
-          <label for="atlas-world">{{atlasLocalize "ATLAS.Importer.World"}}</label>
-          <select id="atlas-world" name="worldId">
-            <option value="">{{atlasLocalize "ATLAS.Importer.ChooseWorld"}}</option>
-            {{#each worlds}}
-              <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
-            {{/each}}
-          </select>
-        </div>
-        {{#if canLoad}}
-          <div class="form-group">
-            <label for="atlas-campaign">{{atlasLocalize "ATLAS.Importer.Campaign"}}</label>
-            <select id="atlas-campaign" name="campaignId">
-              <option value="">{{atlasLocalize "ATLAS.Importer.WorldItself"}}</option>
-              {{#each campaigns}}
-                <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
-              {{/each}}
-            </select>
-          </div>
+      <div class="atlas-scope-summary">
+        {{#if scopeName}}
+          <p><strong>{{atlasLocalize "ATLAS.Importer.Source"}}:</strong> {{scopeName}}</p>
+          <button type="button" data-action="loadPersons" {{#unless canLoad}}disabled{{/unless}}>
+            <i class="fa-solid fa-rotate" inert></i> {{atlasLocalize "ATLAS.Importer.LoadPersons"}}
+          </button>
+        {{else}}
+          <p>{{atlasLocalize "ATLAS.Importer.NoSource"}}</p>
         {{/if}}
-        {{#if showAdventurers}}
-          <div class="form-group">
-            <label for="atlas-adventurer">{{atlasLocalize "ATLAS.Importer.ActAs"}}</label>
-            <select id="atlas-adventurer" name="adventurerId">
-              <option value="">{{atlasLocalize "ATLAS.Importer.AsMaster"}}</option>
-              {{#each adventurers}}
-                <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>
-              {{/each}}
-            </select>
-          </div>
-        {{/if}}
-        <button type="button" data-action="loadPersons" {{#unless canLoad}}disabled{{/unless}}>
-          <i class="fa-solid fa-users" inert></i> {{atlasLocalize "ATLAS.Importer.LoadPersons"}}
+        <button type="button" data-action="openSettings" {{#if importing}}disabled{{/if}}>
+          <i class="fa-solid fa-gear" inert></i> {{atlasLocalize "ATLAS.Importer.OpenSettings"}}
         </button>
-      </fieldset>
+      </div>
 
       {{#if errorMessage}}
         <div class="atlas-error" role="alert">

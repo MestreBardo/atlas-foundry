@@ -1,7 +1,9 @@
 import { AtlasClient } from './atlas-client.js';
 import { ensureScopeFolder, writePersonEntry } from './journal-writer.js';
 import { MODULE_ID } from './person-journal.js';
-import { readConnection } from './settings.js';
+import { readConnection, readScope } from './settings.js';
+import { AtlasSettingsApplication } from './settings-application.js';
+import { describeError } from './errors.js';
 import { initializeLocalization, localize as atlasLocalize } from './localization.js';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -10,16 +12,6 @@ const PERSON_STATUSES = ['alive', 'dead', 'missing', 'imprisoned', 'exiled', 'un
 
 const localize = (key, data = null) =>
   atlasLocalize(`ATLAS.${key}`, data);
-
-const describeError = (error) => {
-  const code = error?.code ?? 'UNKNOWN';
-  const knownKey = {
-    NETWORK_ERROR: 'Errors.Network',
-    HTTP_401: 'Errors.Unauthorized',
-    HTTP_403: 'Errors.Forbidden',
-  }[code];
-  return knownKey ? localize(knownKey) : localize('Errors.Generic', { code });
-};
 
 const readPageLabels = () => ({
   portrait: localize('Journal.Portrait'),
@@ -62,19 +54,14 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
     },
   };
 
-  #worlds = [];
-  #campaigns = [];
-  #adventurers = [];
   #persons = [];
-  #selectedWorldId = '';
-  #selectedCampaignId = '';
-  #selectedAdventurerId = '';
   #selectedPersonIds = new Set();
   #filter = '';
   #status = 'loading';
   #error = null;
   #progress = { done: 0, total: 0 };
   #loadedScope = null;
+  #loadRevision = 0;
 
   get title() {
     return localize('Importer.Title');
@@ -88,21 +75,18 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
     return readConnection().token.trim() !== '';
   }
 
-  get #scope() {
-    const world = this.#worlds.find((candidate) => candidate.id === this.#selectedWorldId);
-    if (!world) {
-      return null;
-    }
-    const campaign = this.#campaigns.find((candidate) => candidate.id === this.#selectedCampaignId);
-    if (campaign) {
-      return {
-        type: 'campaign',
-        id: campaign.id,
-        name: campaign.name,
-        adventurerId: this.#selectedAdventurerId || null,
-      };
-    }
-    return { type: 'world', id: world.id, name: world.name, adventurerId: null };
+  get #scope() { return readScope(); }
+
+  async refreshSource() {
+    if (this.#status === 'importing') return;
+    ++this.#loadRevision;
+    this.#persons = [];
+    this.#loadedScope = null;
+    this.#selectedPersonIds.clear();
+    this.#filter = '';
+    this.#error = null;
+    if (this.#hasToken && this.#scope) await AtlasImporterApplication.#onLoadPersons.call(this);
+    else { this.#status = 'ready'; await this.render(); }
   }
 
   async _prepareContext() {
@@ -125,17 +109,8 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
       importing: this.#status === 'importing',
       errorMessage: this.#error ? describeError(this.#error) : '',
       progress: this.#progress,
-      worlds: this.#worlds.map((world) => ({ ...world, selected: world.id === this.#selectedWorldId })),
-      campaigns: this.#campaigns.map((campaign) => ({
-        ...campaign,
-        selected: campaign.id === this.#selectedCampaignId,
-      })),
-      adventurers: this.#adventurers.map((adventurer) => ({
-        ...adventurer,
-        selected: adventurer.id === this.#selectedAdventurerId,
-      })),
-      showAdventurers: this.#selectedCampaignId !== '' && this.#adventurers.length > 0,
-      canLoad: this.#selectedWorldId !== '',
+      canLoad: this.#scope !== null && this.#status !== 'loading' && this.#status !== 'importing',
+      scopeName: this.#scope?.name ?? '',
       personsLoaded: this.#loadedScope !== null,
       loadedScopeName: this.#loadedScope?.name ?? '',
       persons: visiblePersons,
@@ -150,27 +125,11 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
     queueMicrotask(() => void this.#initialize());
   }
 
-  async #initialize() {
-    if (this.#hasToken) {
-      await this.#loadWorlds();
-      return;
-    }
-    this.#status = 'ready';
-    await this.render();
-  }
+  async #initialize() { await this.refreshSource(); }
 
   async _onRender(context, options) {
     await super._onRender(context, options);
     const element = this.element;
-    element.querySelector('[name="worldId"]')?.addEventListener('change', (event) => {
-      void this.#selectWorld(event.target.value);
-    });
-    element.querySelector('[name="campaignId"]')?.addEventListener('change', (event) => {
-      void this.#selectCampaign(event.target.value);
-    });
-    element.querySelector('[name="adventurerId"]')?.addEventListener('change', (event) => {
-      this.#selectedAdventurerId = event.target.value;
-    });
     element.querySelector('[name="filter"]')?.addEventListener('input', (event) => {
       this.#filter = event.target.value;
       void this.#renderKeepingFilterFocus();
@@ -205,62 +164,35 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
   }
 
   async #run(action) {
+    const revision = this.#loadRevision;
     this.#status = 'loading';
     this.#error = null;
     await this.render();
     try {
       await action();
+      if (revision !== this.#loadRevision) return;
       this.#status = 'ready';
     } catch (error) {
+      if (revision !== this.#loadRevision) return;
       this.#status = 'error';
       this.#error = error;
     }
     await this.render();
   }
 
-  async #loadWorlds() {
-    await this.#run(async () => {
-      this.#worlds = await this.#client.listWorlds();
-    });
-  }
-
-  async #selectWorld(worldId) {
-    this.#selectedWorldId = worldId;
-    this.#selectedCampaignId = '';
-    this.#selectedAdventurerId = '';
-    this.#campaigns = [];
-    this.#adventurers = [];
-    if (!worldId) {
-      await this.render();
-      return;
-    }
-    await this.#run(async () => {
-      this.#campaigns = await this.#client.listCampaigns(worldId);
-    });
-  }
-
-  async #selectCampaign(campaignId) {
-    this.#selectedCampaignId = campaignId;
-    this.#selectedAdventurerId = '';
-    this.#adventurers = [];
-    if (!campaignId) {
-      await this.render();
-      return;
-    }
-    await this.#run(async () => {
-      this.#adventurers = await this.#client.listMyAdventurers(campaignId);
-    });
-  }
-
   static async #onLoadPersons() {
     const scope = this.#scope;
-    if (!scope) {
+    if (!scope || this.#status === 'importing') {
       return;
     }
     this.#selectedPersonIds.clear();
+    this.#persons = [];
+    this.#loadedScope = null;
     this.#filter = '';
+    const request = ++this.#loadRevision;
     await this.#run(async () => {
       const persons = await this.#client.listPersons(scope);
+      if (request !== this.#loadRevision) return;
       this.#persons = persons.sort((first, second) => first.name.localeCompare(second.name));
       this.#loadedScope = scope;
     });
@@ -281,7 +213,11 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
   static async #onImportSelected() {
     const scope = this.#loadedScope;
     const personIds = [...this.#selectedPersonIds];
-    if (!scope || personIds.length === 0) {
+    if (!scope || personIds.length === 0 || this.#status !== 'ready') {
+      return;
+    }
+    if (JSON.stringify(scope) !== JSON.stringify(this.#scope)) {
+      await this.refreshSource();
       return;
     }
     this.#status = 'importing';
@@ -320,20 +256,13 @@ export class AtlasImporterApplication extends HandlebarsApplicationMixin(Applica
     } else {
       ui.notifications.info(message);
     }
+    if (JSON.stringify(scope) !== JSON.stringify(this.#scope)) await this.refreshSource();
   }
 
-  static async #onRetry() {
-    if (this.#worlds.length === 0) {
-      await this.#loadWorlds();
-      return;
-    }
-    this.#status = 'ready';
-    this.#error = null;
-    await this.render();
-  }
+  static async #onRetry() { await this.refreshSource(); }
 
   static async #onOpenSettings() {
-    const SettingsConfig = foundry.applications.settings.SettingsConfig;
-    await new SettingsConfig().render({ force: true });
+    const Settings = this.#hasToken ? AtlasSettingsApplication : foundry.applications.settings.SettingsConfig;
+    await new Settings().render({ force: true });
   }
 }

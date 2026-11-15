@@ -16,7 +16,7 @@ export class AtlasClient {
   }
 
   async get(path, { adventurerId = null } = {}) {
-    const headers = { Authorization: `Bearer ${this.token}` };
+    const headers = { Authorization: `Bearer ${this.token}`, 'X-Atlas-Client': 'foundry' };
     if (adventurerId) {
       headers['X-Adventurer-Id'] = adventurerId;
     }
@@ -58,6 +58,11 @@ export class AtlasClient {
 
   listMyAdventurers(campaignId) {
     return this.getAll(`/campaigns/${encodeURIComponent(campaignId)}/adventurers/mine`);
+  }
+
+  async listAdventurerNames(campaignId) {
+    const body = await this.get(`/campaigns/${encodeURIComponent(campaignId)}/adventurers/names`);
+    return body?.payload ?? [];
   }
 
   listPersons(scope) {

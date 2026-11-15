@@ -121,6 +121,27 @@
   flex: 1 1 100%;
 }
 
+.atlas-settings .atlas-settings-body {
+  overflow-y: auto;
+}
+
+.atlas-settings .form-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.atlas-settings .form-group label,
+.atlas-settings .form-group select {
+  flex: 1;
+  min-width: 0;
+}
+
+.atlas-settings .hint {
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
 .atlas-person-facts {
   padding-left: 1.25rem;
 }
