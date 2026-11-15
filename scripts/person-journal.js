@@ -58,7 +58,7 @@ export const buildPersonPages = (person, { labels, converter = null }) => {
       type: 'image',
       src: image,
       image: { caption: person.name },
-      flags: { [MODULE_ID]: { part: 'portrait' } },
+      flags: { [MODULE_ID]: { part: 'portrait', imageAlt: (person.imageAlt ?? '').trim() } },
     });
   }
   const description = person.description ?? '';

@@ -9,6 +9,7 @@ export const buildPersonSheetData = (entry, visiblePages) => {
     name: entry.name,
     initial: entry.name?.trim().charAt(0).toLocaleUpperCase() || '?',
     portrait: portrait?.src || '',
+    portraitAlt: portrait?.getFlag(MODULE_ID, 'imageAlt') || entry.name || '',
     scopeName: entry.getFlag(MODULE_ID, 'scopeName') || entry.folder?.name || '',
     hasProfile: Boolean(profile),
     nicknames: (person?.nicknames ?? []).join(' · '),

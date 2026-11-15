@@ -31,6 +31,14 @@ test('dossier uses imported facts, keeps zero age and lists local pages', () => 
   assert.equal(pages[1].getFlag(MODULE_ID, 'person').descriptionHtml, undefined);
 });
 
+test('the portrait uses the Atlas image description, or the name without one', () => {
+  const described = buildPersonPages({ ...person, imageAlt: ' Ada with a silver crown ' }, { labels }).map(pageDocument);
+  assert.equal(described[0].getFlag(MODULE_ID, 'imageAlt'), 'Ada with a silver crown');
+  assert.equal(buildPersonSheetData(entryDocument(described), described).portraitAlt, 'Ada with a silver crown');
+  const plain = buildPersonPages(person, { labels }).map(pageDocument);
+  assert.equal(buildPersonSheetData(entryDocument(plain), plain).portraitAlt, 'Ada');
+});
+
 test('a hidden profile never supplies facts, tags or history to the dossier', () => {
   const pages = buildPersonPages(person, { labels }).map(pageDocument);
   const data = buildPersonSheetData(entryDocument(pages), [pages[0]]);
