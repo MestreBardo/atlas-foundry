@@ -29,7 +29,7 @@
     },
     "Importer": {
       "Open": "Import from Atlas",
-      "Title": "Import persons from Atlas",
+      "Title": "Import from Atlas",
       "NoToken": "To import, create a token in Atlas (Profile → Integrations) and paste it in the module settings.",
       "OpenSettings": "Open settings",
       "Source": "Import from",
@@ -44,11 +44,40 @@
       "Retry": "Try again",
       "Filter": "Filter by name",
       "ToggleAll": "Select all",
-      "AlreadyImported": "already imported",
+      "AlreadyImported": "imported",
       "NoPersons": "No persons here.",
       "Import": "Import ({count})",
-      "Done": "Atlas: {created} created, {updated} updated, {failed} failed.",
-      "NoSource": "Choose a world in the Atlas settings to import persons."
+      "Done": "Atlas: {created} created, {updated} updated, {failed} failed. Actors created: {actors}.",
+      "NoSource": "Choose a world in the Atlas settings to import persons.",
+      "Eyebrow": "Atlas · Table archive",
+      "Subtitle": "Bring the records of your world to the table.",
+      "Reload": "Refresh list",
+      "Category": "Record type",
+      "Options": "Import options",
+      "Destination": "Destination",
+      "JournalPack": "Journals",
+      "ActorPack": "Actors",
+      "InWorld": "This world’s journals",
+      "InCompendium": "Create or update Atlas compendiums",
+      "CreateActors": "Also create an Actor",
+      "ActorType": "Actor type",
+      "ActorHint": "Creates a name, image and journal link. Uses system defaults and preserves already linked character sheets.",
+      "CompendiumHint": "Journal and Actor compendiums are private to the GM. Import records into the world to share them at the table.",
+      "PermissionsHint": "Documents respect character links and accepted Atlas shares. Documents of an unlinked adventurer are GM-only.",
+      "NoItems": "No records found.",
+      "LastImport": "Last import results",
+      "Progress": "Import progress",
+      "SelectionCount": "{count} selected",
+      "Kinds": {
+        "persons": "Persons",
+        "adventurers": "Adventurers",
+        "places": "Places",
+        "factions": "Factions"
+      },
+      "Result": {
+        "created": "Created",
+        "updated": "Updated"
+      }
     },
     "Errors": {
       "Network": "Could not reach Atlas. Check your connection and try again.",
@@ -57,7 +86,15 @@
       "Generic": "Atlas answered with an error ({code}).",
       "SourceNotFound": "The selected source is no longer available. Choose the world and campaign again.",
       "InvalidLink": "The Actor is no longer owned by a player or the adventurer is unavailable in this campaign. Reload the settings.",
-      "DuplicateAdventurer": "A campaign adventurer can only be linked to one player character sheet."
+      "DuplicateAdventurer": "A campaign adventurer can only be linked to one player character sheet.",
+      "InvalidImportKind": "This record type is unavailable in this source.",
+      "InvalidActorType": "Choose an Actor type supported by this game system.",
+      "InvalidAtlasResponse": "Atlas returned an invalid record. The previous import was preserved.",
+      "InvalidDestination": "Choose a valid import destination.",
+      "InvalidPackType": "A compendium with this name already exists with another document type.",
+      "PackNotPrivate": "The Atlas compendium is shared. Make it private to players before importing documents.",
+      "PackLocked": "The Atlas compendium is locked. Unlock it in Foundry before importing.",
+      "PermissionSync": "Could not update Atlas document permissions. Check character links and reimport the records."
     },
     "Journal": {
       "Portrait": "Portrait",
@@ -91,6 +128,12 @@
       "NoDocuments": "No imported documents. Reimport the person to include the documents available in Atlas.",
       "DocumentsSharing": "Manage sharing for each document in Open journal.",
       "NoDetails": "No positions or tags recorded."
+    },
+    "ActorDocuments": {
+      "Title": "Atlas documents",
+      "Hint": "Imported adventurer documents and accepted shares. This list respects your Foundry permissions.",
+      "Empty": "No documents available. The GM can import documents and check the character link in the Atlas settings.",
+      "Records": "Journal records"
     }
   }
 }

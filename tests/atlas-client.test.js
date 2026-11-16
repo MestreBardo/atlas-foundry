@@ -130,3 +130,37 @@ test('fails an incomplete document list instead of treating it as empty', async 
   });
   await assert.rejects(client.listPersonDocuments({ type: 'world', id: 'w1' }, 'p1'), { code: 'HTTP_403' });
 });
+
+test('lists and finds places and factions with encoded scope IDs and the selected viewpoint', async () => {
+  const paths = [];
+  const client = new AtlasClient({ apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
+    fetchImplementation: async (url, options) => {
+      paths.push(url);
+      assert.equal(options.headers['X-Adventurer-Id'], 'adv1');
+      return jsonResponse(200, { payload: url.includes('limit=') ? [] : { id: 'entity' } });
+    },
+  });
+  const scope = { type: 'campaign', id: 'c/1', adventurerId: 'adv1' };
+  for (const kind of ['places', 'factions']) {
+    await client.listEntities(scope, kind);
+    await client.findEntity(scope, kind, 'e/1');
+    await client.listEntityDocuments(scope, kind, 'e/1');
+  }
+  assert.ok(paths.includes('https://api.test/campaigns/c%2F1/places/e%2F1/documents?limit=50'));
+  assert.ok(paths.includes('https://api.test/campaigns/c%2F1/factions/e%2F1'));
+});
+
+test('adventurer imports use their own document endpoint and keep accepted and pending shares distinct', async () => {
+  const client = new AtlasClient({ apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
+    fetchImplementation: async (url, options) => {
+      assert.equal(options.headers['X-Adventurer-Id'], undefined);
+      return jsonResponse(200, { payload: url.includes('/mine')
+        ? [{ id: 'a1' }, { id: 'a2' }]
+        : [{ id: 'd1', viewerIds: ['a2'], pendingIds: ['a3'] }] });
+    },
+  });
+  const scope = { type: 'campaign', id: 'c1', adventurerId: 'a1' };
+  assert.deepEqual(await client.listEntities(scope, 'adventurers'), [{ id: 'a1' }]);
+  assert.deepEqual(await client.listEntityDocuments(scope, 'adventurers', 'a1'), [{ id: 'd1', viewerIds: ['a2'], pendingIds: ['a3'] }]);
+  await assert.rejects(client.listEntities({ type: 'world', id: 'w1' }, 'adventurers'), { code: 'INVALID_IMPORT_KIND' });
+});

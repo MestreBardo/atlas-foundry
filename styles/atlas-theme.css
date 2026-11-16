@@ -50,7 +50,9 @@
   src: url(../assets/fonts/eb-garamond-normal-600.ttf) format('truetype');
 }
 
-.atlas-person-sheet {
+.atlas-person-sheet,
+.atlas-import-workbench,
+.atlas-actor-documents {
   --atlas-font-display: 'Atlas Foundry Cinzel Decorative', serif;
   --atlas-font-heading: 'Atlas Foundry Cormorant SC', Georgia, serif;
   --atlas-font-body: 'Atlas Foundry EB Garamond', Georgia, serif;

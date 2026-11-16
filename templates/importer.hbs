@@ -1,80 +1,91 @@
-<div class="atlas-importer-root">
-  <section class="atlas-importer-body">
-    {{#unless hasToken}}
-      <div class="atlas-notice">
-        <p>{{atlasLocalize "ATLAS.Importer.NoToken"}}</p>
-        <button type="button" data-action="openSettings">
-          <i class="fa-solid fa-gear" inert></i> {{atlasLocalize "ATLAS.Importer.OpenSettings"}}
-        </button>
-      </div>
+<div class="atlas-importer-root atlas-workbench">
+  <header class="atlas-workbench-header">
+    <div>
+      <p class="atlas-workbench-eyebrow">{{atlasLocalize "ATLAS.Importer.Eyebrow"}}</p>
+      <h1>{{atlasLocalize "ATLAS.Importer.Title"}}</h1>
+      <p class="atlas-workbench-subtitle">{{atlasLocalize "ATLAS.Importer.Subtitle"}}</p>
+    </div>
+    <i class="fa-solid fa-book-atlas atlas-workbench-seal" aria-hidden="true"></i>
+  </header>
+
+  {{#unless hasToken}}
+    <section class="atlas-importer-body atlas-workbench-empty">
+      <i class="fa-solid fa-key" aria-hidden="true"></i>
+      <p>{{atlasLocalize "ATLAS.Importer.NoToken"}}</p>
+      <button type="button" data-action="openSettings">{{atlasLocalize "ATLAS.Importer.OpenSettings"}}</button>
+    </section>
+  {{else}}
+    <section class="atlas-workbench-source">
+      <div><span class="atlas-workbench-eyebrow">{{scopeType}}</span><strong>{{scopeName}}</strong></div>
+      <button type="button" data-action="loadEntities" {{#unless canLoad}}disabled{{/unless}} title="{{atlasLocalize "ATLAS.Importer.Reload"}}" aria-label="{{atlasLocalize "ATLAS.Importer.Reload"}}"><i class="fa-solid fa-rotate" aria-hidden="true"></i></button>
+      <button type="button" data-action="openSettings" {{#if importing}}disabled{{/if}} title="{{atlasLocalize "ATLAS.Importer.OpenSettings"}}" aria-label="{{atlasLocalize "ATLAS.Importer.OpenSettings"}}"><i class="fa-solid fa-gear" aria-hidden="true"></i></button>
+    </section>
+
+    {{#unless scopeName}}
+      <section class="atlas-importer-body atlas-workbench-empty"><p>{{atlasLocalize "ATLAS.Importer.NoSource"}}</p></section>
     {{else}}
-      <div class="atlas-scope-summary">
-        {{#if scopeName}}
-          <p><strong>{{atlasLocalize "ATLAS.Importer.Source"}}:</strong> {{scopeName}}</p>
-          <button type="button" data-action="loadPersons" {{#unless canLoad}}disabled{{/unless}}>
-            <i class="fa-solid fa-rotate" inert></i> {{atlasLocalize "ATLAS.Importer.LoadPersons"}}
-          </button>
-        {{else}}
-          <p>{{atlasLocalize "ATLAS.Importer.NoSource"}}</p>
-        {{/if}}
-        <button type="button" data-action="openSettings" {{#if importing}}disabled{{/if}}>
-          <i class="fa-solid fa-gear" inert></i> {{atlasLocalize "ATLAS.Importer.OpenSettings"}}
-        </button>
-      </div>
+      <nav class="atlas-import-kinds" aria-label="{{atlasLocalize "ATLAS.Importer.Category"}}">
+        {{#each kinds}}
+          <button type="button" data-action="changeKind" data-kind="{{id}}" aria-pressed="{{#if active}}true{{else}}false{{/if}}" class="{{#if active}}active{{/if}}" {{#if ../busy}}disabled{{/if}}><i class="{{icon}}" aria-hidden="true"></i><span>{{label}}</span></button>
+        {{/each}}
+      </nav>
+
+      <fieldset class="atlas-import-options" {{#if busy}}disabled{{/if}}>
+        <legend class="atlas-workbench-eyebrow">{{atlasLocalize "ATLAS.Importer.Options"}}</legend>
+        <label class="atlas-import-option"><span>{{atlasLocalize "ATLAS.Importer.Destination"}}</span>
+          <select name="destination">
+            <option value="world" {{#if inWorld}}selected{{/if}}>{{atlasLocalize "ATLAS.Importer.InWorld"}}</option>
+            <option value="compendium" {{#if inCompendium}}selected{{/if}}>{{atlasLocalize "ATLAS.Importer.InCompendium"}}</option>
+          </select>
+        </label>
+        <div class="atlas-import-actor-option">
+          <label class="atlas-import-checkbox"><input type="checkbox" name="createActors" {{#if createActors}}checked{{/if}} {{#unless actorCreationAvailable}}disabled{{/unless}}><span>{{atlasLocalize "ATLAS.Importer.CreateActors"}}</span></label>
+          {{#if createActors}}
+            <label class="atlas-import-option"><span>{{atlasLocalize "ATLAS.Importer.ActorType"}}</span>
+              <select name="actorType">{{#each actorTypes}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}</select>
+            </label>
+            <p class="atlas-import-hint">{{atlasLocalize "ATLAS.Importer.ActorHint"}}</p>
+          {{/if}}
+        </div>
+        <p class="atlas-import-hint">{{#if inCompendium}}{{atlasLocalize "ATLAS.Importer.CompendiumHint"}}{{else}}{{atlasLocalize "ATLAS.Importer.PermissionsHint"}}{{/if}}</p>
+      </fieldset>
 
       {{#if errorMessage}}
-        <div class="atlas-error" role="alert">
-          <p>{{errorMessage}}</p>
-          <button type="button" data-action="retry">{{atlasLocalize "ATLAS.Importer.Retry"}}</button>
-        </div>
+        <div class="atlas-error" role="alert"><p>{{errorMessage}}</p><button type="button" data-action="retry" {{#if busy}}disabled{{/if}}>{{atlasLocalize "ATLAS.Importer.Retry"}}</button></div>
       {{/if}}
+      {{#if loading}}<p class="atlas-status" role="status"><i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> {{atlasLocalize "ATLAS.Importer.Loading"}}</p>{{/if}}
 
-      {{#if loading}}
-        <p class="atlas-status"><i class="fa-solid fa-spinner fa-spin" inert></i> {{atlasLocalize "ATLAS.Importer.Loading"}}</p>
-      {{/if}}
-
-      {{#if personsLoaded}}
-        <div class="atlas-persons">
+      {{#if itemsLoaded}}
+        <section class="atlas-importer-body atlas-workbench-list">
+          <div class="atlas-workbench-list-title"><h2>{{kindLabel}}</h2><span>{{visibleCount}} / {{totalCount}}</span></div>
           <div class="atlas-persons-toolbar">
-            <input type="search" name="filter" value="{{filter}}" placeholder="{{atlasLocalize "ATLAS.Importer.Filter"}}" aria-label="{{atlasLocalize "ATLAS.Importer.Filter"}}">
-            <button type="button" data-action="toggleAll" {{#if importing}}disabled{{/if}}>{{atlasLocalize "ATLAS.Importer.ToggleAll"}}</button>
+            <input type="search" name="filter" value="{{filter}}" placeholder="{{atlasLocalize "ATLAS.Importer.Filter"}}" aria-label="{{atlasLocalize "ATLAS.Importer.Filter"}}" {{#if busy}}disabled{{/if}}>
+            <button type="button" data-action="toggleAll" {{#if busy}}disabled{{/if}}>{{atlasLocalize "ATLAS.Importer.ToggleAll"}}</button>
           </div>
           <ul class="atlas-person-list">
-            {{#each persons}}
-              <li>
-                <label class="atlas-person">
-                  <input type="checkbox" name="personId" value="{{id}}" {{#if selected}}checked{{/if}} {{#if ../importing}}disabled{{/if}}>
-                  {{#if image}}
-                    <img src="{{image}}" alt="" loading="lazy">
-                  {{else}}
-                    <span class="atlas-person-initial" aria-hidden="true">{{initial}}</span>
-                  {{/if}}
-                  <span class="atlas-person-name">{{name}}</span>
-                  {{#if alreadyImported}}
-                    <span class="atlas-person-badge">{{atlasLocalize "ATLAS.Importer.AlreadyImported"}}</span>
-                  {{/if}}
-                </label>
-              </li>
-            {{else}}
-              <li class="atlas-empty">{{atlasLocalize "ATLAS.Importer.NoPersons"}}</li>
-            {{/each}}
+            {{#each items}}
+              <li><label class="atlas-person {{#if selected}}selected{{/if}}">
+                <input type="checkbox" name="entityId" value="{{id}}" {{#if selected}}checked{{/if}} {{#if ../busy}}disabled{{/if}}>
+                {{#if image}}<img src="{{image}}" alt="" loading="lazy">{{else}}<span class="atlas-person-initial" aria-hidden="true">{{initial}}</span>{{/if}}
+                <span class="atlas-person-name">{{name}}</span>
+                {{#if alreadyImported}}<span class="atlas-person-badge"><i class="fa-solid fa-check" aria-hidden="true"></i> {{atlasLocalize "ATLAS.Importer.AlreadyImported"}}</span>{{/if}}
+              </label></li>
+            {{else}}<li class="atlas-empty">{{atlasLocalize "ATLAS.Importer.NoItems"}}</li>{{/each}}
           </ul>
-        </div>
+        </section>
       {{/if}}
     {{/unless}}
-  </section>
 
-  {{#if hasToken}}
-    <footer class="atlas-importer-footer">
+    {{#if results.length}}
+      <details class="atlas-import-results"><summary>{{atlasLocalize "ATLAS.Importer.LastImport"}}</summary><ul>{{#each results}}<li class="{{#if failed}}failed{{/if}}"><strong>{{name}}</strong><span>{{message}}</span></li>{{/each}}</ul></details>
+    {{/if}}
+    <footer class="atlas-importer-footer atlas-workbench-footer">
       {{#if importing}}
-        <progress value="{{progress.done}}" max="{{progress.total}}"></progress>
-        <span>{{progress.done}} / {{progress.total}}</span>
+        <progress value="{{progress.done}}" max="{{progress.total}}" aria-label="{{atlasLocalize "ATLAS.Importer.Progress"}}"></progress><span role="status">{{progress.done}} / {{progress.total}}</span>
       {{else}}
-        <button type="button" data-action="importSelected" {{#unless canImport}}disabled{{/unless}}>
-          <i class="fa-solid fa-file-import" inert></i>
-          {{atlasLocalize "ATLAS.Importer.Import" count=selectedCount}}
-        </button>
+        <span>{{atlasLocalize "ATLAS.Importer.SelectionCount" count=selectedCount}}</span>
+        <button type="button" class="atlas-import-primary" data-action="importSelected" {{#unless canImport}}disabled{{/unless}}><i class="fa-solid fa-file-import" aria-hidden="true"></i> {{atlasLocalize "ATLAS.Importer.Import" count=selectedCount}}</button>
       {{/if}}
     </footer>
-  {{/if}}
+  {{/unless}}
 </div>
