@@ -23,6 +23,7 @@ test('follows the next links until the last page', async () => {
     fetchImplementation: async (url, options) => {
       requestedUrls.push(url);
       assert.equal(options.headers.Authorization, 'Bearer atlas_pat_x');
+      assert.equal(options.headers['X-Atlas-Client'], 'foundry');
       assert.equal(options.credentials, 'omit');
       return jsonResponse(200, pages[url]);
     },
@@ -41,6 +42,7 @@ test('sends the adventurer header inside a campaign', async () => {
     fetchImplementation: async (url, options) => {
       assert.equal(url, 'https://api.test/campaigns/c1/persons/p1');
       assert.equal(options.headers['X-Adventurer-Id'], 'adv1');
+      assert.equal(options.headers['X-Atlas-Client'], 'foundry');
       return jsonResponse(200, { payload: { id: 'p1' } });
     },
   });
@@ -48,6 +50,19 @@ test('sends the adventurer header inside a campaign', async () => {
   const person = await client.findPerson({ type: 'campaign', id: 'c1', adventurerId: 'adv1' }, 'p1');
 
   assert.deepEqual(person, { id: 'p1' });
+});
+
+test('loads the public campaign character names for actor assignments', async () => {
+  const client = new AtlasClient({
+    apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
+    fetchImplementation: async (url, options) => {
+      assert.equal(url, 'https://api.test/campaigns/c%2F1/adventurers/names');
+      assert.equal(options.headers['X-Atlas-Client'], 'foundry');
+      assert.equal(options.headers['X-Adventurer-Id'], undefined);
+      return jsonResponse(200, { payload: [{ id: 'adv1', name: 'Ada' }] });
+    },
+  });
+  assert.deepEqual(await client.listAdventurerNames('c/1'), [{ id: 'adv1', name: 'Ada' }]);
 });
 
 test('turns an error answer into the error code of the API', async () => {

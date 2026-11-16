@@ -1,10 +1,6 @@
 {
   "ATLAS": {
     "Settings": {
-      "ApiBaseUrl": {
-        "Name": "Atlas API address",
-        "Hint": "Keep the default unless you use another Atlas server."
-      },
       "Token": {
         "Name": "Atlas personal token",
         "Hint": "Create it in Atlas under Profile → Integrations and paste it here. It stays in this browser only and can only read your account's data."
@@ -13,6 +9,21 @@
         "Name": "Atlas language",
         "Hint": "Choose the language for Atlas in this browser, or follow the Foundry language.",
         "FollowFoundry": "Follow Foundry language"
+      },
+      "Source": {
+        "Name": "Atlas world, campaign and characters",
+        "Label": "Configure integration",
+        "Hint": "Choose the Atlas source for this Foundry world and link campaign characters.",
+        "NoToken": "Save your personal token in the Atlas settings first, then reopen this window.",
+        "WorldHint": "With no campaign selected, access is to the world itself.",
+        "Save": "Save settings",
+        "Saved": "Atlas settings saved."
+      },
+      "Links": {
+        "Name": "Atlas → Foundry characters",
+        "Hint": "Link each campaign character to a Foundry Actor. Each Actor can represent one character per campaign. Links do not change sheets or permissions.",
+        "Unassigned": "Unassigned",
+        "Empty": "No characters available in this campaign."
       }
     },
     "Importer": {
@@ -35,13 +46,17 @@
       "AlreadyImported": "already imported",
       "NoPersons": "No persons here.",
       "Import": "Import ({count})",
-      "Done": "Atlas: {created} created, {updated} updated, {failed} failed."
+      "Done": "Atlas: {created} created, {updated} updated, {failed} failed.",
+      "NoSource": "Choose a world in the Atlas settings to import persons."
     },
     "Errors": {
-      "Network": "Could not reach Atlas. Check the connection and the API address.",
+      "Network": "Could not reach Atlas. Check your connection and try again.",
       "Unauthorized": "The token is no longer valid. Create a new one in Atlas and paste it in the settings.",
       "Forbidden": "Your account cannot see this in Atlas.",
-      "Generic": "Atlas answered with an error ({code})."
+      "Generic": "Atlas answered with an error ({code}).",
+      "SourceNotFound": "The selected source is no longer available. Choose the world and campaign again.",
+      "InvalidLink": "A character or Actor is no longer available. Reload the settings.",
+      "DuplicateActor": "The same Actor cannot represent two characters in the same campaign."
     },
     "Journal": {
       "Portrait": "Portrait",

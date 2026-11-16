@@ -4,7 +4,7 @@ import { initializeLocalization, localize } from './localization.js';
 export const DEFAULT_API_BASE_URL = 'https://atlas-mocha-beta-12.vercel.app';
 
 export const localizeSettings = () => {
-  for (const [setting, path] of [['language', 'Language'], ['apiBaseUrl', 'ApiBaseUrl'], ['token', 'Token']]) {
+  for (const [setting, path] of [['language', 'Language'], ['token', 'Token']]) {
     const config = game.settings.settings.get(`${MODULE_ID}.${setting}`);
     if (!config) continue;
     config.name = localize(`ATLAS.Settings.${path}.Name`);
@@ -15,9 +15,15 @@ export const localizeSettings = () => {
       en: 'English',
     };
   }
+  const menu = game.settings.menus?.get(`${MODULE_ID}.source`);
+  if (menu) {
+    menu.name = localize('ATLAS.Settings.Source.Name');
+    menu.label = localize('ATLAS.Settings.Source.Label');
+    menu.hint = localize('ATLAS.Settings.Source.Hint');
+  }
 };
 
-export const registerSettings = ({ onLanguageChange = () => {} } = {}) => {
+export const registerSettings = ({ onLanguageChange = () => {}, onSourceChange = () => {}, settingsApplication } = {}) => {
   game.settings.register(MODULE_ID, 'language', {
     name: 'ATLAS.Settings.Language.Name',
     hint: 'ATLAS.Settings.Language.Hint',
@@ -36,11 +42,10 @@ export const registerSettings = ({ onLanguageChange = () => {} } = {}) => {
       onLanguageChange();
     },
   });
+  // Keep the legacy key registered for existing worlds; connections always use the internal URL.
   game.settings.register(MODULE_ID, 'apiBaseUrl', {
-    name: 'ATLAS.Settings.ApiBaseUrl.Name',
-    hint: 'ATLAS.Settings.ApiBaseUrl.Hint',
     scope: 'world',
-    config: true,
+    config: false,
     type: String,
     default: DEFAULT_API_BASE_URL,
   });
@@ -51,10 +56,36 @@ export const registerSettings = ({ onLanguageChange = () => {} } = {}) => {
     config: true,
     type: String,
     default: '',
+    onChange: onSourceChange,
+  });
+  game.settings.register(MODULE_ID, 'source', {
+    scope: 'world',
+    config: false,
+    type: Object,
+    default: {},
+    onChange: onSourceChange,
+  });
+  if (settingsApplication) game.settings.registerMenu(MODULE_ID, 'source', {
+    name: 'ATLAS.Settings.Source.Name',
+    label: 'ATLAS.Settings.Source.Label',
+    hint: 'ATLAS.Settings.Source.Hint',
+    icon: 'fa-solid fa-book-atlas',
+    type: settingsApplication,
+    restricted: true,
   });
 };
 
 export const readConnection = () => ({
-  apiBaseUrl: game.settings.get(MODULE_ID, 'apiBaseUrl') || DEFAULT_API_BASE_URL,
+  apiBaseUrl: DEFAULT_API_BASE_URL,
   token: game.settings.get(MODULE_ID, 'token') ?? '',
 });
+
+export const readSource = () => game.settings.get(MODULE_ID, 'source') ?? {};
+
+export const readScope = () => {
+  const source = readSource();
+  if (!source.worldId) return null;
+  return source.campaignId
+    ? { type: 'campaign', id: source.campaignId, name: source.campaignName, adventurerId: source.adventurerId || null }
+    : { type: 'world', id: source.worldId, name: source.worldName, adventurerId: null };
+};
