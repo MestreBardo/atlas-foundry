@@ -1,5 +1,5 @@
 import { AtlasClient } from './atlas-client.js';
-import { buildActorLinkUpdates, getActorLink } from './actor-links.js';
+import { buildActorLinkUpdates, getActorLink, isPlayerActor } from './actor-links.js';
 import { describeError } from './errors.js';
 import { initializeLocalization, localize } from './localization.js';
 import { MODULE_ID } from './person-journal.js';
@@ -39,7 +39,7 @@ export class AtlasSettingsApplication extends HandlebarsApplicationMixin(Applica
 
   async _prepareContext() {
     await initializeLocalization();
-    const actors = [...game.actors].sort((a, b) => a.name.localeCompare(b.name));
+    const actors = [...game.actors].filter(isPlayerActor).sort((a, b) => a.name.localeCompare(b.name));
     return {
       hasToken: Boolean(readConnection().token.trim()), loading: this.#loading, saving: this.#saving,
       busy: this.#loading || this.#saving, errorMessage: this.#error ? describeError(this.#error) : '',
@@ -47,10 +47,13 @@ export class AtlasSettingsApplication extends HandlebarsApplicationMixin(Applica
       campaigns: this.#campaigns.map((campaign) => ({ ...campaign, selected: campaign.id === this.#source.campaignId })),
       hasWorld: Boolean(this.#source.worldId), hasCampaign: Boolean(this.#source.campaignId),
       viewpoints: this.#viewpoints.map((adventurer) => ({ ...adventurer, selected: adventurer.id === this.#source.adventurerId })),
-      assignments: this.#adventurers.map((adventurer) => ({
-        ...adventurer,
-        actors: actors.map((actor) => ({ id: actor.id, name: actor.name, selected: this.#assignments[adventurer.id] === actor.id })),
-      })),
+      hasAdventurers: this.#adventurers.length > 0,
+      assignments: this.#source.campaignId ? actors.map((actor) => ({
+        id: actor.id, name: actor.name,
+        adventurers: this.#adventurers.map((adventurer) => ({
+          id: adventurer.id, name: adventurer.name, selected: this.#assignments[actor.id] === adventurer.id,
+        })),
+      })) : [],
       canSave: this.#loaded && this.#ready && !this.#loading && !this.#saving,
     };
   }
@@ -84,8 +87,8 @@ export class AtlasSettingsApplication extends HandlebarsApplicationMixin(Applica
     this.element.querySelector('[name="adventurerId"]')?.addEventListener('change', (event) => {
       this.#source.adventurerId = event.target.value;
     });
-    this.element.querySelectorAll('[data-adventurer-id]').forEach((select) => {
-      select.addEventListener('change', () => { this.#assignments[select.dataset.adventurerId] = select.value; });
+    this.element.querySelectorAll('[data-actor-id]').forEach((select) => {
+      select.addEventListener('change', () => { this.#assignments[select.dataset.actorId] = select.value; });
     });
   }
 
@@ -133,8 +136,8 @@ export class AtlasSettingsApplication extends HandlebarsApplicationMixin(Applica
     const [adventurers, viewpoints] = await Promise.all([
       this.#client.listAdventurerNames(campaignId), this.#client.listMyAdventurers(campaignId),
     ]);
-    const assignments = Object.fromEntries(adventurers.map(({ id }) => [id,
-      game.actors.find((actor) => getActorLink(actor, campaignId)?.adventurerId === id)?.id ?? '',
+    const assignments = Object.fromEntries([...game.actors].filter(isPlayerActor).map((actor) => [actor.id,
+      getActorLink(actor, campaignId)?.adventurerId ?? '',
     ]));
     return () => { this.#adventurers = adventurers; this.#viewpoints = viewpoints; this.#assignments = assignments; };
   }
@@ -149,8 +152,8 @@ export class AtlasSettingsApplication extends HandlebarsApplicationMixin(Applica
     if (!game.user.isGM || this.#loading || this.#saving || !this.#loaded || !this.#ready) return;
     // Read the final form values too (including a change immediately before submit).
     this.#source.adventurerId = formData.object.adventurerId ?? '';
-    for (const adventurer of this.#adventurers) {
-      this.#assignments[adventurer.id] = formData.object[`actor-${adventurer.id}`] ?? '';
+    for (const actor of [...game.actors].filter(isPlayerActor)) {
+      this.#assignments[actor.id] = formData.object[`adventurer-${actor.id}`] ?? '';
     }
     this.#saving = true;
     this.#error = null;

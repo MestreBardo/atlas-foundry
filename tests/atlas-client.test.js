@@ -52,7 +52,7 @@ test('sends the adventurer header inside a campaign', async () => {
   assert.deepEqual(person, { id: 'p1' });
 });
 
-test('loads the public campaign character names for actor assignments', async () => {
+test('loads only campaign adventurer names for player Actor assignments', async () => {
   const client = new AtlasClient({
     apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
     fetchImplementation: async (url, options) => {

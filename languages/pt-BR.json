@@ -11,19 +11,20 @@
         "FollowFoundry": "Seguir o idioma do Foundry"
       },
       "Source": {
-        "Name": "Mundo, campanha e personagens do Atlas",
+        "Name": "Mundo, campanha e aventureiros do Atlas",
         "Label": "Configurar integração",
-        "Hint": "Escolha a origem do Atlas para este mundo do Foundry e vincule os personagens da campanha.",
+        "Hint": "Escolha a origem do Atlas e vincule as fichas dos jogadores aos aventureiros da campanha.",
         "NoToken": "Salve primeiro o token pessoal nas configurações do Atlas e reabra esta janela.",
         "WorldHint": "Sem campanha selecionada, o acesso é ao próprio mundo.",
         "Save": "Salvar configurações",
         "Saved": "Configurações do Atlas salvas."
       },
       "Links": {
-        "Name": "Personagens Atlas → Foundry",
-        "Hint": "Vincule cada personagem da campanha a um Actor do Foundry. Cada Actor pode representar um personagem por campanha. Os vínculos não alteram fichas nem permissões.",
-        "Unassigned": "Sem vínculo",
-        "Empty": "Nenhum personagem disponível nesta campanha."
+        "Name": "Fichas de jogadores → Aventureiros da campanha",
+        "Hint": "Para cada ficha do Foundry com dono jogador, escolha um aventureiro da campanha selecionada no Atlas.",
+        "Unassigned": "Sem aventureiro vinculado",
+        "Empty": "Nenhum aventureiro disponível nesta campanha.",
+        "NoPlayerActors": "Nenhuma ficha com dono jogador. Nas permissões da ficha, dê a um jogador o nível Dono para vinculá-la."
       }
     },
     "Importer": {
@@ -55,8 +56,8 @@
       "Forbidden": "Sua conta não pode ver isso no Atlas.",
       "Generic": "O Atlas respondeu com um erro ({code}).",
       "SourceNotFound": "A origem selecionada não está mais disponível. Escolha novamente o mundo e a campanha.",
-      "InvalidLink": "Um personagem ou Actor não está mais disponível. Recarregue as configurações.",
-      "DuplicateActor": "O mesmo Actor não pode representar dois personagens na mesma campanha."
+      "InvalidLink": "A ficha não pertence mais a um jogador ou o aventureiro não está disponível nesta campanha. Recarregue as configurações.",
+      "DuplicateAdventurer": "Um aventureiro da campanha só pode ser vinculado a uma ficha de jogador."
     },
     "Journal": {
       "Portrait": "Retrato",
