@@ -39,17 +39,21 @@
         <fieldset class="atlas-scope" {{#if busy}}disabled{{/if}}>
           <legend>{{atlasLocalize "ATLAS.Settings.Links.Name"}}</legend>
           <p class="hint">{{atlasLocalize "ATLAS.Settings.Links.Hint"}}</p>
-          {{#each assignments}}
-            <div class="form-group">
-              <label for="atlas-actor-{{id}}">{{name}}</label>
-              <select id="atlas-actor-{{id}}" name="actor-{{id}}" data-adventurer-id="{{id}}">
-                <option value="">{{atlasLocalize "ATLAS.Settings.Links.Unassigned"}}</option>
-                {{#each actors}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
-              </select>
-            </div>
+          {{#if hasAdventurers}}
+            {{#each assignments}}
+              <div class="form-group">
+                <label for="atlas-adventurer-{{id}}">{{name}}</label>
+                <select id="atlas-adventurer-{{id}}" name="adventurer-{{id}}" data-actor-id="{{id}}">
+                  <option value="">{{atlasLocalize "ATLAS.Settings.Links.Unassigned"}}</option>
+                  {{#each adventurers}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}
+                </select>
+              </div>
+            {{else}}
+              <p class="atlas-empty">{{atlasLocalize "ATLAS.Settings.Links.NoPlayerActors"}}</p>
+            {{/each}}
           {{else}}
             <p class="atlas-empty">{{atlasLocalize "ATLAS.Settings.Links.Empty"}}</p>
-          {{/each}}
+          {{/if}}
         </fieldset>
       {{/if}}
       {{#if loading}}<p class="atlas-status">{{atlasLocalize "ATLAS.Importer.Loading"}}</p>{{/if}}

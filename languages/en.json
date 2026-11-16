@@ -11,19 +11,20 @@
         "FollowFoundry": "Follow Foundry language"
       },
       "Source": {
-        "Name": "Atlas world, campaign and characters",
+        "Name": "Atlas world, campaign and adventurers",
         "Label": "Configure integration",
-        "Hint": "Choose the Atlas source for this Foundry world and link campaign characters.",
+        "Hint": "Choose the Atlas source and link player character sheets to campaign adventurers.",
         "NoToken": "Save your personal token in the Atlas settings first, then reopen this window.",
         "WorldHint": "With no campaign selected, access is to the world itself.",
         "Save": "Save settings",
         "Saved": "Atlas settings saved."
       },
       "Links": {
-        "Name": "Atlas → Foundry characters",
-        "Hint": "Link each campaign character to a Foundry Actor. Each Actor can represent one character per campaign. Links do not change sheets or permissions.",
-        "Unassigned": "Unassigned",
-        "Empty": "No characters available in this campaign."
+        "Name": "Player character sheets → Campaign adventurers",
+        "Hint": "For each Foundry Actor owned by a player, choose an adventurer from the selected Atlas campaign.",
+        "Unassigned": "No linked adventurer",
+        "Empty": "No adventurers available in this campaign.",
+        "NoPlayerActors": "No player-owned Actors. Grant a player Owner permission on a character sheet to link it."
       }
     },
     "Importer": {
@@ -55,8 +56,8 @@
       "Forbidden": "Your account cannot see this in Atlas.",
       "Generic": "Atlas answered with an error ({code}).",
       "SourceNotFound": "The selected source is no longer available. Choose the world and campaign again.",
-      "InvalidLink": "A character or Actor is no longer available. Reload the settings.",
-      "DuplicateActor": "The same Actor cannot represent two characters in the same campaign."
+      "InvalidLink": "The Actor is no longer owned by a player or the adventurer is unavailable in this campaign. Reload the settings.",
+      "DuplicateAdventurer": "A campaign adventurer can only be linked to one player character sheet."
     },
     "Journal": {
       "Portrait": "Portrait",

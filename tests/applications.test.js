@@ -40,8 +40,9 @@ beforeEach(() => {
   source = { worldId: 'w1', worldName: 'World', campaignId: 'c1', campaignName: 'Campaign', adventurerId: 'adv1' };
   updates = []; requests = []; saves = [];
   const actors = [
-    { id: 'a1', name: 'Actor One', getFlag: () => [{ worldId: 'w1', campaignId: 'c1', adventurerId: 'adv1', name: 'Ada' }] },
-    { id: 'a2', name: 'Actor Two', getFlag: () => [] },
+    { id: 'a1', name: 'Actor One', hasPlayerOwner: true, getFlag: () => [{ worldId: 'w1', campaignId: 'c1', adventurerId: 'adv1', name: 'Ada' }] },
+    { id: 'a2', name: 'Actor Two', hasPlayerOwner: true, getFlag: () => [] },
+    { id: 'npc', name: 'GM NPC', hasPlayerOwner: false, getFlag: () => [] },
   ];
   globalThis.game = {
     user: { isGM: true }, actors, journal: [],
@@ -85,15 +86,46 @@ test('settings restore source and links, then persist a reassignment only on sav
   assert.equal(context.worlds[0].selected, true);
   assert.equal(context.campaigns[0].selected, true);
   assert.equal(context.viewpoints[0].selected, true);
-  assert.equal(context.assignments[0].actors[0].selected, true);
+  assert.equal(context.assignments[0].adventurers[0].selected, true);
   assert.deepEqual(updates, []);
   assert.deepEqual(saves, []);
-  await submit(application, { adventurerId: 'adv1', 'actor-adv1': 'a2', 'actor-adv2': '' });
+  await submit(application, { adventurerId: 'adv1', 'adventurer-a1': '', 'adventurer-a2': 'adv1' });
   assert.equal(updates.length, 2);
   assert.deepEqual(updates[0]['flags.atlas-foundry.adventurerLinks'], []);
   assert.equal(updates[1]['flags.atlas-foundry.adventurerLinks'][0].adventurerId, 'adv1');
   assert.equal(source.campaignId, 'c1');
   assert.equal(application.rendered, false);
+});
+
+test('settings list player-owned Actors and only adventurers from the selected campaign', async () => {
+  game.journal.push({ id: 'person1', name: 'Atlas Person' });
+  const application = new AtlasSettingsApplication();
+  const context = await initialize(application);
+  assert.deepEqual(context.assignments.map(({ id }) => id), ['a1', 'a2']);
+  for (const assignment of context.assignments) {
+    assert.deepEqual(assignment.adventurers.map(({ id }) => id), ['adv1', 'adv2']);
+  }
+  assert.equal(requests.some(({ path }) => path.includes('/persons')), false);
+  await submit(application, { 'adventurer-a1': 'person1' });
+  assert.deepEqual(updates, []);
+  assert.deepEqual(saves, []);
+});
+
+test('ownership revoked while settings are open prevents persisting the old player link', async () => {
+  const application = new AtlasSettingsApplication();
+  await initialize(application);
+  game.actors[0].hasPlayerOwner = false;
+  await submit(application, { 'adventurer-a1': 'adv1' });
+  assert.deepEqual(updates, []);
+  assert.deepEqual(saves, []);
+  assert.equal(application.rendered, true);
+});
+
+test('a campaign without player-owned Actors offers no Actor assignments', async () => {
+  game.actors.forEach((actor) => { actor.hasPlayerOwner = false; });
+  const context = await initialize(new AtlasSettingsApplication());
+  assert.equal(context.hasCampaign, true);
+  assert.deepEqual(context.assignments, []);
 });
 
 test('clearing the campaign saves world access and preserves existing actor links', async () => {
@@ -119,15 +151,15 @@ test('changing worlds clears the old campaign and viewpoint before saving', asyn
   assert.deepEqual(updates, []);
 });
 
-test('duplicate actor assignments cause no writes and can be corrected in the same window', async () => {
+test('duplicate adventurer assignments cause no writes and can be corrected in the same window', async () => {
   const application = new AtlasSettingsApplication();
   await initialize(application);
-  await submit(application, { 'actor-adv1': 'a1', 'actor-adv2': 'a1' });
+  await submit(application, { 'adventurer-a1': 'adv1', 'adventurer-a2': 'adv1' });
   assert.deepEqual(updates, []);
   assert.deepEqual(saves, []);
   assert.equal(application.rendered, true);
   assert.equal((await application._prepareContext()).canSave, true);
-  await submit(application, { 'actor-adv1': 'a1', 'actor-adv2': 'a2' });
+  await submit(application, { 'adventurer-a1': 'adv1', 'adventurer-a2': 'adv2' });
   assert.equal(updates.length, 1);
   assert.equal(saves.length, 1);
 });
@@ -146,7 +178,7 @@ test('non-GM users cannot submit source or actor changes', async () => {
   const application = new AtlasSettingsApplication();
   await initialize(application);
   game.user.isGM = false;
-  await submit(application, { 'actor-adv1': 'a2' });
+  await submit(application, { 'adventurer-a2': 'adv1' });
   assert.deepEqual(updates, []);
   assert.deepEqual(saves, []);
 });

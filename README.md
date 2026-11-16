@@ -30,11 +30,13 @@ A importação inclui automaticamente os documentos de cada pessoa, com título,
 - Documentos novos começam privados para o mestre. Como personagens do Atlas e usuários do Foundry têm identificadores diferentes, o compartilhamento é definido nas permissões de cada página pelo próprio Foundry. Reimportar preserva essas permissões e os UUIDs das páginas.
 - Se a leitura dos documentos falhar, aquela pessoa é contada como erro e sua entrada anterior não é modificada.
 
-## Vincular personagens da campanha
+## Vincular fichas dos jogadores aos aventureiros da campanha
 
-Em **Configurar integração**, ao selecionar uma campanha, a seção **Personagens Atlas → Foundry** lista os aventureiros disponíveis no Atlas. Escolha o Actor do Foundry correspondente a cada um e salve. **Sem vínculo** remove uma associação. Um Actor pode representar um personagem por campanha; o mesmo Actor pode ter vínculos em campanhas diferentes.
+Em **Configurar integração**, selecione uma campanha. A seção **Fichas de jogadores → Aventureiros da campanha** mostra apenas Actors com dono jogador (`hasPlayerOwner` do Foundry). Para cada ficha, escolha um dos aventureiros da campanha selecionada no Atlas e salve. **Sem aventureiro vinculado** remove a associação. Cada ficha representa um aventureiro por campanha e cada aventureiro só pode estar vinculado a uma ficha.
 
-Os vínculos ficam nos flags `atlas-foundry.adventurerLinks` dos Actors, com `worldId`, `campaignId`, `adventurerId` e `name`. Trocar de campanha ou usar apenas o mundo preserva os vínculos anteriores. As associações não criam Actors, não substituem suas fichas e não modificam permissões.
+Para disponibilizar uma ficha, conceda a um jogador o nível **Dono** nas permissões do Actor. Actors controlados apenas pelo mestre e entradas de diário não entram na lista. O destino do vínculo usa somente os aventureiros da campanha; as pessoas do Atlas continuam na importação de diários.
+
+Os vínculos ficam nos flags `atlas-foundry.adventurerLinks` dos Actors, com `worldId`, `campaignId`, `adventurerId` e `name`. Trocar de campanha ou usar apenas o mundo preserva os vínculos anteriores. Ao salvar uma campanha, vínculos antigos dessa campanha em Actors sem dono jogador são removidos. As associações não criam Actors, não substituem suas fichas e não modificam permissões.
 
 Outros módulos e macros podem usar a API local:
 
@@ -43,7 +45,7 @@ const atlas = game.modules.get('atlas-foundry').api;
 atlas.openImporter();
 atlas.openSettings();
 atlas.getScope(); // Mundo ou campanha configurada; null sem mundo.
-atlas.getActorLink(game.actors.get('ACTOR_ID')); // Vínculo na campanha ativa; null no mundo.
+atlas.getActorLink(game.actors.get('ACTOR_ID')); // Vínculo de ficha com dono jogador; null sem campanha.
 atlas.getActorLink(game.actors.get('ACTOR_ID'), 'CAMPAIGN_ID'); // Outra campanha.
 ```
 
