@@ -1,5 +1,5 @@
 import { MODULE_ID } from './person-journal.js';
-import { mergeOwnership, ownershipForSource, ownershipUpdate, privateOwnership, snapshotLocalOwnership } from './import-permissions.js';
+import { mergeOwnership, ownershipForSource, ownershipMatches, ownershipUpdate, privateOwnership, snapshotLocalOwnership } from './import-permissions.js';
 import { withJournalLock } from './journal-lock.js';
 
 export const syncEntryPermissions = (entry) => withJournalLock(entry, async () => {
@@ -11,13 +11,13 @@ export const syncEntryPermissions = (entry) => withJournalLock(entry, async () =
     const desired = source ? ownershipForSource(source)
       : page.getFlag(MODULE_ID, 'part') ? privateOwnership() : snapshotLocalOwnership(page);
     ownerships.push(desired);
-    if (JSON.stringify(page.ownership) !== JSON.stringify(desired)) {
+    if (!ownershipMatches(page.ownership, desired)) {
       updates.push({ _id: page.id, ownership: ownershipUpdate(page.ownership, desired) });
     }
   }
   if (updates.length) await entry.updateEmbeddedDocuments('JournalEntryPage', updates);
   const desired = mergeOwnership(ownerships);
-  if (JSON.stringify(entry.ownership) !== JSON.stringify(desired)) {
+  if (!ownershipMatches(entry.ownership, desired)) {
     await entry.update({ ownership: ownershipUpdate(entry.ownership, desired) });
   }
 });
