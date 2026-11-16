@@ -39,8 +39,9 @@ export const createImportTarget = async (scope, { destination = 'world', createA
 
 export const importedEntityKey = (scope, kind, id) => `${buildScopeKey(scope)}:${kind}:${id}`;
 
-export const findEntityEntry = (entries, scope, kind, id) => entries.find((entry) =>
-  entry.getFlag(MODULE_ID, 'importKey') === importedEntityKey(scope, kind, id) ||
-  (kind === 'persons' && entry.getFlag(MODULE_ID, 'personId') === id &&
-    entry.getFlag(MODULE_ID, 'scopeId') === scope.id),
-);
+export const findEntityEntry = (entries, scope, kind, id) => entries.find((entry) => {
+  // A player-owned journal can have forged import flags. Never write private Atlas data into it.
+  if ([...(game.users ?? [])].some((user) => !user.isGM && entry.testUserPermission?.(user, 'OWNER'))) return false;
+  return entry.getFlag(MODULE_ID, 'importKey') === importedEntityKey(scope, kind, id) ||
+    (kind === 'persons' && entry.getFlag(MODULE_ID, 'personId') === id && entry.getFlag(MODULE_ID, 'scopeId') === scope.id);
+});

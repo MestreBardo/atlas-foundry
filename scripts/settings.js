@@ -23,7 +23,7 @@ export const localizeSettings = () => {
   }
 };
 
-export const registerSettings = ({ onLanguageChange = () => {}, onSourceChange = () => {}, settingsApplication } = {}) => {
+export const registerSettings = ({ onLanguageChange = () => {}, onSourceChange = () => {}, onActorLinksChange = () => {}, settingsApplication } = {}) => {
   game.settings.register(MODULE_ID, 'language', {
     name: 'ATLAS.Settings.Language.Name',
     hint: 'ATLAS.Settings.Language.Hint',
@@ -64,6 +64,9 @@ export const registerSettings = ({ onLanguageChange = () => {}, onSourceChange =
     type: Object,
     default: {},
     onChange: onSourceChange,
+  });
+  game.settings.register(MODULE_ID, 'actorLinks', {
+    scope: 'world', config: false, type: Object, default: {}, onChange: onActorLinksChange,
   });
   if (settingsApplication) game.settings.registerMenu(MODULE_ID, 'source', {
     name: 'ATLAS.Settings.Source.Name',

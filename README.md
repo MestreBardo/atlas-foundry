@@ -59,7 +59,7 @@ Em **Configurar integração**, selecione uma campanha. A seção **Fichas de jo
 
 Para disponibilizar uma ficha, conceda a um jogador o nível **Dono** nas permissões do Actor. Actors controlados apenas pelo mestre e entradas de diário não entram na lista. O destino do vínculo usa somente os aventureiros da campanha; as pessoas do Atlas continuam na importação de diários.
 
-Os vínculos ficam nos flags `atlas-foundry.adventurerLinks` dos Actors, com `worldId`, `campaignId`, `adventurerId` e `name`. Trocar de campanha ou usar apenas o mundo preserva os vínculos anteriores. Ao salvar uma campanha, vínculos antigos dessa campanha em Actors sem dono jogador são removidos. As associações não criam Actors, não substituem suas fichas e não modificam permissões.
+Os vínculos que autorizam documentos ficam numa configuração de mundo que somente o mestre pode salvar. Os flags dos Actors mantêm apenas uma cópia de identificação; editá-los não concede acesso. Ao atualizar de uma versão anterior, confira os vínculos apresentados e salve as configurações para autorizá-los. Trocar de campanha ou usar apenas o mundo preserva os vínculos anteriores. Ao salvar uma campanha, vínculos antigos dessa campanha em Actors sem dono jogador são removidos. As associações não criam Actors, não substituem suas fichas e não modificam permissões.
 
 Outros módulos e macros podem usar a API local:
 

@@ -39,6 +39,7 @@
         <fieldset class="atlas-scope" {{#if busy}}disabled{{/if}}>
           <legend>{{atlasLocalize "ATLAS.Settings.Links.Name"}}</legend>
           <p class="hint">{{atlasLocalize "ATLAS.Settings.Links.Hint"}}</p>
+          {{#if linksNeedSave}}<p class="hint">{{atlasLocalize "ATLAS.Settings.Links.ApprovalHint"}}</p>{{/if}}
           {{#if hasAdventurers}}
             {{#each assignments}}
               <div class="form-group">

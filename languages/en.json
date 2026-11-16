@@ -20,6 +20,7 @@
         "Saved": "Atlas settings saved."
       },
       "Links": {
+        "ApprovalHint": "Review and save the links to authorize document access in this campaign.",
         "Name": "Player character sheets → Campaign adventurers",
         "Hint": "For each Foundry Actor owned by a player, choose an adventurer from the selected Atlas campaign.",
         "Unassigned": "No linked adventurer",

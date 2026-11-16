@@ -20,6 +20,7 @@
         "Saved": "Configurações do Atlas salvas."
       },
       "Links": {
+        "ApprovalHint": "Confira os vínculos e salve para autorizar o acesso aos documentos nesta campanha.",
         "Name": "Fichas de jogadores → Aventureiros da campanha",
         "Hint": "Para cada ficha do Foundry com dono jogador, escolha um aventureiro da campanha selecionada no Atlas.",
         "Unassigned": "Sem aventureiro vinculado",

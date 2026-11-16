@@ -51,10 +51,31 @@ test('linking a previously private import never exposes inherited local notes', 
   assert.equal(entry.pages.find((page) => page.name === 'GM note').testUserPermission(game.users[1], 1), false);
 });
 
+test('owning a local note never grants ownership of the managed journal', async () => {
+  addLinkedActor('a1', 'alice');
+  const target = await world();
+  const { entry } = await writeEntityEntry('adventurers', adventurer, [], scope, target, labels);
+  await entry.createEmbeddedDocuments('JournalEntryPage', [{ name: 'Player note', ownership: { default: 0, alice: 3 } }]);
+  await writeEntityEntry('adventurers', adventurer, [], scope, target, labels);
+  assert.equal(entry.ownership.alice, 2);
+  assert.equal(entry.pages.find((page) => page.name === 'Player note').ownership.alice, 3);
+});
+
+test('local page grants hidden behind a private parent do not create new readers', async () => {
+  const target = await world();
+  const { entry } = await writeEntityEntry('adventurers', adventurer, [], scope, target, labels);
+  await entry.createEmbeddedDocuments('JournalEntryPage', [{ name: 'Hidden note', ownership: { default: 0, bob: 3 } }]);
+  addLinkedActor('a1', 'alice');
+  await writeEntityEntry('adventurers', adventurer, [], scope, target, labels);
+  assert.equal(entry.ownership.bob, undefined);
+  assert.equal(entry.pages.find((page) => page.name === 'Hidden note').ownership.bob, undefined);
+});
+
 test('losing a character link revokes document access without another Atlas request', async () => {
   const actor = addLinkedActor('a1', 'alice'); addLinkedActor('a2', 'bob');
   const { entry } = await writeEntityEntry('adventurers', adventurer, documents, scope, await world(), labels);
   actor.flags[MODULE_ID].adventurerLinks = [];
+  delete game.approvedLinks.c1[actor.id];
   await syncEntryPermissions(entry);
   assert.deepEqual(entry.ownership, { default: 0 });
   assert.equal(entry.pages.every((page) => JSON.stringify(page.ownership) === '{"default":0}'), true);
@@ -130,6 +151,28 @@ test('new Actors contain a journal reference and no private document text or gam
   assert.equal(actor.system.hp, 99);
   assert.equal(actor.type, 'character');
   assert.equal(actor.ownership.alice, 3);
+});
+
+test('forged Actor import flags cannot redirect a private import into a player-owned sheet', async () => {
+  const actor = addLinkedActor('a2', 'bob', 'c1', { name: 'Bob’s sheet' });
+  actor.flags[MODULE_ID].importKey = 'campaign:c1:persons:secret';
+  const target = await world();
+  const { entry } = await writeEntityEntry('persons', { id: 'secret', name: 'Secret NPC' }, [], scope, target, labels);
+  const result = await writeEntityActor('persons', { id: 'secret', name: 'Secret NPC' }, scope, target, entry, 'npc');
+  assert.notEqual(result.actor.id, actor.id);
+  assert.equal(actor.name, 'Bob’s sheet');
+  assert.deepEqual(result.actor.ownership, { default: 0 });
+});
+
+test('forged import flags on a player-owned journal cannot capture private Atlas data', async () => {
+  const fake = new MockDocument({ name: 'Player journal', ownership: { default: 0, bob: 3 },
+    flags: { [MODULE_ID]: { importKey: 'campaign:c1:persons:secret' } }, pages: [],
+  }, 'JournalEntry');
+  game.journal.push(fake);
+  const result = await writeEntityEntry('persons', { id: 'secret', name: 'Secret NPC' }, [], scope, await world(), labels);
+  assert.notEqual(result.entry.id, fake.id);
+  assert.equal(fake.name, 'Player journal');
+  assert.deepEqual(result.entry.ownership, { default: 0 });
 });
 
 test('an incomplete API document list or unsupported Actor type causes no document mutation', async () => {

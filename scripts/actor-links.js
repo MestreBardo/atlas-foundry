@@ -4,11 +4,33 @@ import { readSource } from './settings.js';
 /** Use Foundry's ownership model, independently of the game system's Actor types. */
 export const isPlayerActor = (actor) => actor.hasPlayerOwner === true;
 
-/** Only player-owned Actors can represent campaign adventurers. */
-export const getActorLink = (actor, campaignId = readSource().campaignId) =>
-  campaignId && isPlayerActor(actor)
-    ? actor.getFlag(MODULE_ID, 'adventurerLinks')?.find((link) => link.campaignId === campaignId) ?? null
-    : null;
+export const readActorLinkRegistry = () => game.settings.get(MODULE_ID, 'actorLinks') ?? {};
+
+/** Actor flags are owner-editable. Only the GM-controlled world setting authorizes document access. */
+export const getActorLink = (actor, campaignId = readSource().campaignId) => {
+  if (!campaignId || !isPlayerActor(actor)) return null;
+  const link = readActorLinkRegistry()[campaignId]?.[actor.id];
+  return link?.campaignId === campaignId && link.adventurerId ? { ...link } : null;
+};
+
+/** Proposals from older versions are displayed to the GM but never grant access until saved. */
+export const proposedActorLink = (actor, campaignId) => {
+  if (Object.hasOwn(readActorLinkRegistry(), campaignId)) return getActorLink(actor, campaignId);
+  return isPlayerActor(actor)
+    ? actor.getFlag(MODULE_ID, 'adventurerLinks')?.find((link) => link.campaignId === campaignId) ?? null : null;
+};
+
+export const buildCampaignLinkRegistry = ({ actors, source, adventurers, assignments }) => {
+  // Apply the same validation as the Actor metadata update before writing either document.
+  buildActorLinkUpdates({ actors, source, adventurers, assignments });
+  const links = {};
+  for (const actor of actors.filter(isPlayerActor)) {
+    const adventurer = adventurers.find(({ id }) => id === assignments[actor.id]);
+    if (adventurer) links[actor.id] = { worldId: source.worldId, campaignId: source.campaignId,
+      adventurerId: adventurer.id, name: adventurer.name };
+  }
+  return { ...readActorLinkRegistry(), [source.campaignId]: links };
+};
 
 export const buildActorLinkUpdates = ({ actors, source, adventurers, assignments }) => {
   const availableIds = new Set(adventurers.map(({ id }) => id));

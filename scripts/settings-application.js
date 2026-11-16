@@ -1,5 +1,5 @@
 import { AtlasClient } from './atlas-client.js';
-import { buildActorLinkUpdates, getActorLink, isPlayerActor } from './actor-links.js';
+import { buildActorLinkUpdates, buildCampaignLinkRegistry, isPlayerActor, proposedActorLink, readActorLinkRegistry } from './actor-links.js';
 import { describeError } from './errors.js';
 import { initializeLocalization, localize } from './localization.js';
 import { MODULE_ID } from './person-journal.js';
@@ -46,6 +46,7 @@ export class AtlasSettingsApplication extends HandlebarsApplicationMixin(Applica
       worlds: this.#worlds.map((world) => ({ ...world, selected: world.id === this.#source.worldId })),
       campaigns: this.#campaigns.map((campaign) => ({ ...campaign, selected: campaign.id === this.#source.campaignId })),
       hasWorld: Boolean(this.#source.worldId), hasCampaign: Boolean(this.#source.campaignId),
+      linksNeedSave: Boolean(this.#source.campaignId) && !Object.hasOwn(readActorLinkRegistry(), this.#source.campaignId),
       viewpoints: this.#viewpoints.map((adventurer) => ({ ...adventurer, selected: adventurer.id === this.#source.adventurerId })),
       hasAdventurers: this.#adventurers.length > 0,
       assignments: this.#source.campaignId ? actors.map((actor) => ({
@@ -137,7 +138,7 @@ export class AtlasSettingsApplication extends HandlebarsApplicationMixin(Applica
       this.#client.listAdventurerNames(campaignId), this.#client.listMyAdventurers(campaignId),
     ]);
     const assignments = Object.fromEntries([...game.actors].filter(isPlayerActor).map((actor) => [actor.id,
-      getActorLink(actor, campaignId)?.adventurerId ?? '',
+      proposedActorLink(actor, campaignId)?.adventurerId ?? '',
     ]));
     return () => { this.#adventurers = adventurers; this.#viewpoints = viewpoints; this.#assignments = assignments; };
   }
@@ -173,7 +174,11 @@ export class AtlasSettingsApplication extends HandlebarsApplicationMixin(Applica
       const updates = campaign ? buildActorLinkUpdates({
         actors: [...game.actors], source, adventurers: this.#adventurers, assignments: this.#assignments,
       }) : [];
+      const registry = campaign ? buildCampaignLinkRegistry({
+        actors: [...game.actors], source, adventurers: this.#adventurers, assignments: this.#assignments,
+      }) : null;
       if (updates.length) await foundry.documents.Actor.updateDocuments(updates);
+      if (registry) await game.settings.set(MODULE_ID, 'actorLinks', registry);
       await game.settings.set(MODULE_ID, 'source', source);
       ui.notifications.info(localize('ATLAS.Settings.Source.Saved'));
       await this.close();

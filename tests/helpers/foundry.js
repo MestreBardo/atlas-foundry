@@ -54,9 +54,9 @@ export const setupFoundry = () => {
   ];
   globalThis.game = {
     users, user: users[0], journal: [], actors: [], folders: [], packs: new Map(), writes: [], packEvents: [],
-    uuidDocuments: new Map(), documentTypes: { Actor: ['character', 'npc', 'group'] },
+    approvedLinks: {}, uuidDocuments: new Map(), documentTypes: { Actor: ['character', 'npc', 'group'] },
     i18n: { localize: (key) => key },
-    settings: { get: (_module, key) => ({ source: { worldId: 'w1', campaignId: 'c1', campaignName: 'Campaign' }, language: 'en' })[key] },
+    settings: { get: (_module, key) => ({ source: { worldId: 'w1', campaignId: 'c1', campaignName: 'Campaign' }, actorLinks: game.approvedLinks, language: 'en' })[key] },
   };
   const create = (documentName, collection) => async (data, options = {}) => {
     if (options.pack) {
@@ -95,6 +95,7 @@ export const addLinkedActor = (adventurerId, userId, campaignId = 'c1', extra = 
     flags: { [MODULE_ID]: { adventurerLinks: [{ worldId: 'w1', campaignId, adventurerId }] } }, ...extra,
   }, 'Actor');
   game.actors.push(actor);
+  (game.approvedLinks[campaignId] ??= {})[actor.id] = { worldId: 'w1', campaignId, adventurerId };
   return actor;
 };
 
