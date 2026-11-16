@@ -56,7 +56,8 @@ export const mergeOwnership = (ownerships) => {
   const result = privateOwnership();
   for (const ownership of ownerships) {
     for (const [id, level] of Object.entries(ownership ?? {})) {
-      if (id !== 'default' && level > 0) result[id] = Math.max(result[id] ?? 0, level);
+      // Page ownership must never make a player the owner of the managed parent journal.
+      if (id !== 'default' && level > 0) result[id] = Math.max(result[id] ?? 0, Math.min(level, 2));
     }
   }
   return result;
@@ -72,8 +73,11 @@ export const snapshotLocalOwnership = (page) => {
   const ownership = privateOwnership();
   for (const user of game.users ?? []) {
     if (user.isGM || user.role === 0) continue;
+    if (page.parent?.testUserPermission && !page.parent.testUserPermission(user, 'LIMITED')) continue;
     const level = [3, 2, 1].find((value) => page.testUserPermission?.(user, value)) ?? 0;
-    if (level) ownership[user.id] = level;
+    const effective = page.parent?.testUserPermission && !page.parent.testUserPermission(user, 'OBSERVER')
+      ? Math.min(level, 1) : level;
+    if (effective) ownership[user.id] = effective;
   }
   return ownership;
 };

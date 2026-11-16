@@ -4,10 +4,12 @@ import { DEFAULT_API_BASE_URL, readConnection, readScope, registerSettings } fro
 import { buildActorLinkUpdates, getActorLink, isPlayerActor } from '../scripts/actor-links.js';
 
 let source;
+let actorLinks;
 beforeEach(() => {
   source = { worldId: 'w1', worldName: 'World' };
+  actorLinks = {};
   globalThis.game = { settings: { get: (_module, key) => ({
-    source, apiBaseUrl: 'https://old-custom-url.test', token: 'atlas_pat_test',
+    source, actorLinks, apiBaseUrl: 'https://old-custom-url.test', token: 'atlas_pat_test',
   })[key] } };
 });
 
@@ -38,6 +40,8 @@ test('registers a GM settings menu, shared source and an invisible legacy URL', 
   assert.equal(configs.get('apiBaseUrl').config, false);
   assert.equal(configs.get('source').scope, 'world');
   assert.equal(configs.get('source').config, false);
+  assert.equal(configs.get('actorLinks').scope, 'world');
+  assert.equal(configs.get('actorLinks').config, false);
   assert.equal(configs.get('token').scope, 'client');
   assert.equal(menus.get('source').restricted, true);
   assert.equal(menus.get('source').type, SettingsApplication);
@@ -69,6 +73,7 @@ test('exposes only the link for the current campaign and no link in world scope'
   const linkedActor = actor('a1', [link]);
   assert.equal(getActorLink(linkedActor), null);
   source.campaignId = 'c1';
+  actorLinks.c1 = { a1: link };
   assert.deepEqual(getActorLink(linkedActor), link);
   source.campaignId = 'c2';
   assert.equal(getActorLink(linkedActor), null);

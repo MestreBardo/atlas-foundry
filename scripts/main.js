@@ -38,6 +38,7 @@ Hooks.once('init', () => {
   registerSettings({
     onLanguageChange: refreshModuleLanguage,
     onSourceChange: () => { if (importer?.rendered) void importer.refreshSource(); },
+    onActorLinksChange: schedulePermissionSync,
     settingsApplication: AtlasSettingsApplication,
   });
   registerLocalizationHelper();

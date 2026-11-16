@@ -19,7 +19,10 @@ export const writeEntityActor = async (kind, entity, scope, target, entry, actor
     if (linked) return { status: 'linked', actor: linked };
   }
   const importKey = importedEntityKey(scope, kind, entity.id);
-  const existing = [...target.actors].find((actor) => actor.getFlag(MODULE_ID, 'importKey') === importKey);
+  // Owners can edit Actor flags. The association recorded on the GM-managed journal is authoritative.
+  const actorUuid = entry.getFlag(MODULE_ID, 'actorUuid');
+  const existing = [...target.actors].find((actor) => actor.uuid === actorUuid);
+  if (existing?.hasPlayerOwner) return { status: 'linked', actor: existing };
   const data = {
     name: entity.name, img: entity.portrait ?? entity.image ?? 'icons/svg/mystery-man.svg',
     flags: { [MODULE_ID]: { importKey, journalUuid: entry.uuid, entityType: kind, entityId: entity.id,
@@ -34,5 +37,6 @@ export const writeEntityActor = async (kind, entity, scope, target, entry, actor
     ownership: ownershipForSource(profilePermissionSource(kind, entity, scope)),
   }, target.actorPack ? { pack: target.actorPack.collection } : {});
   if (Array.isArray(target.actors) && !target.actors.some(({ id }) => id === actor.id)) target.actors.push(actor);
+  await entry.update({ flags: { [MODULE_ID]: { actorUuid: actor.uuid } } });
   return { status: 'created', actor };
 };

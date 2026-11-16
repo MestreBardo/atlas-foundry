@@ -53,3 +53,12 @@ test('permission updates remove stale readers instead of relying on a recursive 
   assert.deepEqual(ownershipUpdate({ default: 2, alice: 2, bob: 2 }, { default: 0, alice: 2 }),
     { default: 0, alice: 2, '-=bob': null });
 });
+
+test('forging an owner-editable Actor flag cannot claim an unlinked adventurer’s documents', () => {
+  const bob = game.actors[1];
+  bob.flags['atlas-foundry'].adventurerLinks = [{ campaignId: 'c1', adventurerId: 'unlinked' }];
+  assert.deepEqual(adventurerAudience('c1', ['unlinked']), { default: 0 });
+  const source = documentPermissionSource('adventurers', { id: 'unlinked' }, scope, {});
+  assert.deepEqual(ownershipForSource(source), { default: 0 });
+  assert.deepEqual(adventurerAudience('c1', ['a1']), { default: 0, alice: 2 });
+});

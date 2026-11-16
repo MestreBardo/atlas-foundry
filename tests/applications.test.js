@@ -20,6 +20,7 @@ globalThis.foundry = {
 const { AtlasSettingsApplication } = await import('../scripts/settings-application.js');
 const { AtlasImporterApplication } = await import('../scripts/importer-application.js');
 let source;
+let actorLinks;
 let requests;
 let saves;
 const responses = {
@@ -38,6 +39,7 @@ before(async () => {
 
 beforeEach(() => {
   source = { worldId: 'w1', worldName: 'World', campaignId: 'c1', campaignName: 'Campaign', adventurerId: 'adv1' };
+  actorLinks = { c1: { a1: { worldId: 'w1', campaignId: 'c1', adventurerId: 'adv1', name: 'Ada' } } };
   updates = []; requests = []; saves = [];
   const actors = [
     { id: 'a1', name: 'Actor One', hasPlayerOwner: true, getFlag: () => [{ worldId: 'w1', campaignId: 'c1', adventurerId: 'adv1', name: 'Ada' }] },
@@ -47,8 +49,8 @@ beforeEach(() => {
   globalThis.game = {
     user: { isGM: true }, actors, journal: [],
     settings: {
-      get: (_module, key) => ({ source, token: 'atlas_pat_test', language: 'auto' })[key],
-      set: async (_module, key, value) => { saves.push({ key, value }); source = value; },
+      get: (_module, key) => ({ source, actorLinks, token: 'atlas_pat_test', language: 'auto' })[key],
+      set: async (_module, key, value) => { saves.push({ key, value }); if (key === 'source') source = value; if (key === 'actorLinks') actorLinks = value; },
     },
     i18n: { localize: (key) => key },
   };
@@ -94,7 +96,22 @@ test('settings restore source and links, then persist a reassignment only on sav
   assert.deepEqual(updates[0]['flags.atlas-foundry.adventurerLinks'], []);
   assert.equal(updates[1]['flags.atlas-foundry.adventurerLinks'][0].adventurerId, 'adv1');
   assert.equal(source.campaignId, 'c1');
+  assert.deepEqual(actorLinks.c1.a2, { worldId: 'w1', campaignId: 'c1', adventurerId: 'adv1', name: 'Ada' });
+  assert.equal(actorLinks.c1.a1, undefined);
   assert.equal(application.rendered, false);
+});
+
+test('legacy Actor flags are only proposals until the GM reviews and saves settings', async () => {
+  actorLinks = {};
+  const { getActorLink } = await import('../scripts/actor-links.js');
+  assert.equal(getActorLink(game.actors[0], 'c1'), null);
+  const application = new AtlasSettingsApplication();
+  const context = await initialize(application);
+  assert.equal(context.linksNeedSave, true);
+  assert.equal(context.assignments[0].adventurers[0].selected, true);
+  assert.equal(getActorLink(game.actors[0], 'c1'), null);
+  await submit(application, { 'adventurer-a1': 'adv1' });
+  assert.equal(getActorLink(game.actors[0], 'c1').adventurerId, 'adv1');
 });
 
 test('settings list player-owned Actors and only adventurers from the selected campaign', async () => {
@@ -161,7 +178,7 @@ test('duplicate adventurer assignments cause no writes and can be corrected in t
   assert.equal((await application._prepareContext()).canSave, true);
   await submit(application, { 'adventurer-a1': 'adv1', 'adventurer-a2': 'adv2' });
   assert.equal(updates.length, 1);
-  assert.equal(saves.length, 1);
+  assert.equal(saves.length, 2);
 });
 
 test('failed campaign requests disable saving instead of removing previous links', async () => {
