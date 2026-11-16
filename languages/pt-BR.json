@@ -29,7 +29,7 @@
     },
     "Importer": {
       "Open": "Importar do Atlas",
-      "Title": "Importar pessoas do Atlas",
+      "Title": "Importar do Atlas",
       "NoToken": "Para importar, crie um token no Atlas (Perfil → Integrações) e cole nas configurações do módulo.",
       "OpenSettings": "Abrir configurações",
       "Source": "De onde importar",
@@ -44,11 +44,40 @@
       "Retry": "Tentar de novo",
       "Filter": "Filtrar por nome",
       "ToggleAll": "Marcar todas",
-      "AlreadyImported": "já importada",
+      "AlreadyImported": "importado",
       "NoPersons": "Nenhuma pessoa aqui.",
       "Import": "Importar ({count})",
-      "Done": "Atlas: {created} criadas, {updated} atualizadas, {failed} com erro.",
-      "NoSource": "Escolha um mundo nas configurações do Atlas para importar pessoas."
+      "Done": "Atlas: {created} criados, {updated} atualizados, {failed} com erro. Actors criados: {actors}.",
+      "NoSource": "Escolha um mundo nas configurações do Atlas para importar pessoas.",
+      "Eyebrow": "Atlas · Arquivo da mesa",
+      "Subtitle": "Traga os registros do seu mundo para a mesa.",
+      "Reload": "Atualizar lista",
+      "Category": "Tipo de registro",
+      "Options": "Opções de importação",
+      "Destination": "Destino",
+      "JournalPack": "Diários",
+      "ActorPack": "Actors",
+      "InWorld": "Diários deste mundo",
+      "InCompendium": "Criar ou atualizar pacotes Atlas",
+      "CreateActors": "Criar Actor também",
+      "ActorType": "Tipo de Actor",
+      "ActorHint": "Cria nome, imagem e acesso ao registro. Usa os atributos padrão do sistema e preserva fichas já vinculadas.",
+      "CompendiumHint": "Os pacotes de diários e Actors ficam privados para o mestre. Para compartilhar na mesa, importe os registros no mundo.",
+      "PermissionsHint": "Documentos respeitam os vínculos das fichas e os compartilhamentos aceitos no Atlas. Sem vínculo, os documentos do aventureiro ficam só para o mestre.",
+      "NoItems": "Nenhum registro encontrado.",
+      "LastImport": "Resultado da última importação",
+      "Progress": "Progresso da importação",
+      "SelectionCount": "{count} selecionados",
+      "Kinds": {
+        "persons": "Pessoas",
+        "adventurers": "Aventureiros",
+        "places": "Locais",
+        "factions": "Facções"
+      },
+      "Result": {
+        "created": "Criado",
+        "updated": "Atualizado"
+      }
     },
     "Errors": {
       "Network": "Não foi possível falar com o Atlas. Confira sua conexão e tente novamente.",
@@ -57,7 +86,15 @@
       "Generic": "O Atlas respondeu com um erro ({code}).",
       "SourceNotFound": "A origem selecionada não está mais disponível. Escolha novamente o mundo e a campanha.",
       "InvalidLink": "A ficha não pertence mais a um jogador ou o aventureiro não está disponível nesta campanha. Recarregue as configurações.",
-      "DuplicateAdventurer": "Um aventureiro da campanha só pode ser vinculado a uma ficha de jogador."
+      "DuplicateAdventurer": "Um aventureiro da campanha só pode ser vinculado a uma ficha de jogador.",
+      "InvalidImportKind": "Esse tipo de registro não está disponível nesta origem.",
+      "InvalidActorType": "Escolha um tipo de Actor disponível no sistema desta mesa.",
+      "InvalidAtlasResponse": "O Atlas retornou um registro inválido. A importação anterior foi preservada.",
+      "InvalidDestination": "Escolha um destino de importação válido.",
+      "InvalidPackType": "Já existe um pacote com esse nome e outro tipo de documento.",
+      "PackNotPrivate": "O pacote Atlas está compartilhado. Torne-o privado para jogadores antes de importar documentos.",
+      "PackLocked": "O pacote Atlas está bloqueado. Desbloqueie-o no Foundry antes de importar.",
+      "PermissionSync": "Não foi possível atualizar as permissões dos documentos Atlas. Confira os vínculos e reimporte os registros."
     },
     "Journal": {
       "Portrait": "Retrato",
@@ -91,6 +128,12 @@
       "NoDocuments": "Nenhum documento importado. Reimporte a pessoa para trazer os documentos disponíveis no Atlas.",
       "DocumentsSharing": "Gerencie o compartilhamento de cada documento em Abrir diário.",
       "NoDetails": "Nenhum cargo ou tag informado."
+    },
+    "ActorDocuments": {
+      "Title": "Documentos Atlas",
+      "Hint": "Documentos importados do aventureiro e compartilhamentos aceitos. Esta lista respeita suas permissões no Foundry.",
+      "Empty": "Nenhum documento disponível. O mestre pode importar os documentos e conferir o vínculo da ficha nas configurações do Atlas.",
+      "Records": "Registros no diário"
     }
   }
 }

@@ -75,7 +75,7 @@ test('formats counts including zero and preserves unknown placeholders and keys'
   assert.equal(localize('ATLAS.Importer.Import', { count: 0 }), 'Importar (0)');
   assert.equal(localize('ATLAS.Importer.Import'), 'Importar ({count})');
   assert.equal(localize('ATLAS.Missing'), 'ATLAS.Missing');
-  assert.equal(localize('ATLAS.Importer.Done', { created: 2, updated: 1, failed: 0 }), 'Atlas: 2 criadas, 1 atualizadas, 0 com erro.');
+  assert.equal(localize('ATLAS.Importer.Done', { created: 2, updated: 1, failed: 0, actors: 0 }), 'Atlas: 2 criados, 1 atualizados, 0 com erro. Actors criados: 0.');
 });
 
 test('saving a preference updates module setting labels and refreshes module UI', async () => {

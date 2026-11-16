@@ -1,0 +1,10 @@
+<section class="atlas-actor-documents-body">
+  <header class="atlas-workbench-header"><div><p class="atlas-workbench-eyebrow">{{atlasLocalize "ATLAS.ActorDocuments.Title"}}</p><h1>{{actorName}}</h1></div><i class="fa-solid fa-file-lines atlas-workbench-seal" aria-hidden="true"></i></header>
+  <p class="atlas-actor-documents-hint">{{atlasLocalize "ATLAS.ActorDocuments.Hint"}}</p>
+  <ul class="atlas-actor-document-list">
+    {{#each documents}}
+      <li><button type="button" data-action="openDocument" data-uuid="{{uuid}}"><i class="fa-solid fa-file-lines" aria-hidden="true"></i><span><strong>{{name}}</strong>{{#if subtitle}}<small>{{subtitle}}</small>{{/if}}<small>{{sourceName}}</small></span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></button></li>
+    {{else}}<li class="atlas-empty">{{atlasLocalize "ATLAS.ActorDocuments.Empty"}}</li>{{/each}}
+  </ul>
+  {{#if records.length}}<footer class="atlas-actor-records"><p class="atlas-workbench-eyebrow">{{atlasLocalize "ATLAS.ActorDocuments.Records"}}</p>{{#each records}}<button type="button" data-action="openDocument" data-uuid="{{uuid}}"><i class="fa-solid fa-book-open" aria-hidden="true"></i> {{name}}</button>{{/each}}</footer>{{/if}}
+</section>

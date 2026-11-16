@@ -187,13 +187,13 @@ test('importer loads the saved campaign and refreshes from world scope after set
   const application = new AtlasImporterApplication();
   const context = await initialize(application);
   assert.equal(context.scopeName, 'Campaign');
-  assert.equal(context.persons[0].name, 'Campaign Person');
+  assert.equal(context.items[0].name, 'Campaign Person');
   assert.equal(requests[0].options.headers['X-Adventurer-Id'], 'adv1');
   source = { worldId: 'w1', worldName: 'World', adventurerId: 'stale' };
   await application.refreshSource();
   const worldContext = await application._prepareContext();
   assert.equal(worldContext.scopeName, 'World');
-  assert.equal(worldContext.persons[0].name, 'World Person');
+  assert.equal(worldContext.items[0].name, 'World Person');
   assert.equal(requests[1].options.headers['X-Adventurer-Id'], undefined);
 });
 
@@ -209,6 +209,6 @@ test('late campaign response cannot repopulate an importer whose source was clea
   await pending;
   const context = await application._prepareContext();
   assert.equal(context.canLoad, false);
-  assert.equal(context.personsLoaded, false);
-  assert.deepEqual(context.persons, []);
+  assert.equal(context.itemsLoaded, false);
+  assert.deepEqual(context.items, []);
 });

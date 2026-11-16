@@ -81,7 +81,38 @@ export class AtlasClient {
     });
     return body.payload;
   }
+
+  async listEntities(scope, kind) {
+    checkEntityKind(scope, kind);
+    if (kind === 'adventurers') {
+      const items = await this.listMyAdventurers(scope.id);
+      return scope.adventurerId ? items.filter(({ id }) => id === scope.adventurerId) : items;
+    }
+    return this.getAll(`${scopePath(scope)}/${kind}`, { adventurerId: scope.adventurerId });
+  }
+
+  async findEntity(scope, kind, id) {
+    checkEntityKind(scope, kind);
+    const body = await this.get(`${scopePath(scope)}/${kind}/${encodeURIComponent(id)}`, {
+      adventurerId: kind === 'adventurers' ? null : scope.adventurerId,
+    });
+    return body.payload;
+  }
+
+  listEntityDocuments(scope, kind, id) {
+    checkEntityKind(scope, kind);
+    return this.getAll(`${scopePath(scope)}/${kind}/${encodeURIComponent(id)}/documents`, {
+      adventurerId: kind === 'adventurers' ? null : scope.adventurerId,
+    });
+  }
 }
+
+const checkEntityKind = (scope, kind) => {
+  if (!['persons', 'adventurers', 'places', 'factions'].includes(kind) ||
+    (kind === 'adventurers' && scope.type !== 'campaign')) {
+    throw new AtlasRequestError(0, 'INVALID_IMPORT_KIND');
+  }
+};
 
 export const scopePath = (scope) =>
   `/${scope.type === 'campaign' ? 'campaigns' : 'worlds'}/${encodeURIComponent(scope.id)}`;

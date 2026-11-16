@@ -6,6 +6,8 @@ import { initializeLocalization, localize, registerLocalizationHelper } from './
 import { AtlasSettingsApplication } from './settings-application.js';
 import { getActorLink } from './actor-links.js';
 import { readScope } from './settings.js';
+import { addActorDocumentsButton, AtlasActorDocumentsApplication, openActorDocuments } from './actor-documents-application.js';
+import { schedulePermissionSync } from './permission-sync.js';
 
 let importer = null;
 
@@ -24,6 +26,9 @@ const refreshModuleLanguage = () => {
   for (const settings of AtlasSettingsApplication.instances()) {
     if (settings instanceof AtlasSettingsApplication && settings.rendered) settings.render({ force: true });
   }
+  for (const window of AtlasActorDocumentsApplication.instances()) {
+    if (window instanceof AtlasActorDocumentsApplication && window.rendered) window.render({ force: true });
+  }
   document.querySelectorAll('.atlas-import-button span').forEach((label) => {
     label.textContent = localize('ATLAS.Importer.Open');
   });
@@ -41,6 +46,7 @@ Hooks.once('init', () => {
     openImporter,
     openSettings: () => new AtlasSettingsApplication().render({ force: true }),
     getActorLink,
+    openActorDocuments,
     getScope: readScope,
   };
   void initializeLocalization().then(() => {
@@ -48,6 +54,21 @@ Hooks.once('init', () => {
     refreshModuleLanguage();
   });
 });
+
+Hooks.once('ready', schedulePermissionSync);
+Hooks.on('createJournalEntry', (entry) => {
+  if (entry.getFlag(MODULE_ID, 'managedOwnership')) schedulePermissionSync();
+});
+for (const hook of ['renderActorSheet', 'renderActorSheetV2', 'renderApplicationV2']) {
+  Hooks.on(hook, addActorDocumentsButton);
+}
+Hooks.on('updateActor', (_actor, changes) => {
+  if (changes.ownership || changes.flags?.[MODULE_ID]?.adventurerLinks ||
+    Object.hasOwn(changes.flags?.[MODULE_ID] ?? {}, '-=adventurerLinks') ||
+    Object.keys(changes).some((key) => key.startsWith('ownership.') || key.includes('adventurerLinks'))) schedulePermissionSync();
+});
+for (const hook of ['createActor', 'deleteActor', 'createUser', 'deleteUser']) Hooks.on(hook, schedulePermissionSync);
+Hooks.on('updateUser', (_user, changes) => { if (Object.hasOwn(changes, 'role')) schedulePermissionSync(); });
 
 Hooks.on('i18nInit', () => {
   void initializeLocalization().then(() => {

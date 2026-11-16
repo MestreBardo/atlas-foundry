@@ -16,8 +16,7 @@ export const buildDocumentPages = (documents, { labels, converter = null }) => {
     return {
       name: document.title,
       type: 'text',
-      // Atlas adventurer IDs cannot be mapped to Foundry user IDs. The GM
-      // explicitly shares each imported document through native page ownership.
+      // Private baseline. The importer applies validated character links and sharing metadata.
       ownership: { default: 0 },
       text: {
         format: 1,
