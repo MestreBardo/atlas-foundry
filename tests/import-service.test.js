@@ -68,7 +68,7 @@ test('local page grants hidden behind a private parent do not create new readers
   addLinkedActor('a1', 'alice');
   await writeEntityEntry('adventurers', adventurer, [], scope, target, labels);
   assert.equal(entry.ownership.bob, undefined);
-  assert.equal(entry.pages.find((page) => page.name === 'Hidden note').ownership.bob, undefined);
+  assert.equal(entry.pages.find((page) => page.name === 'Hidden note').ownership.bob, 0);
 });
 
 test('losing a character link revokes document access without another Atlas request', async () => {
@@ -77,8 +77,13 @@ test('losing a character link revokes document access without another Atlas requ
   actor.flags[MODULE_ID].adventurerLinks = [];
   delete game.approvedLinks.c1[actor.id];
   await syncEntryPermissions(entry);
-  assert.deepEqual(entry.ownership, { default: 0 });
-  assert.equal(entry.pages.every((page) => JSON.stringify(page.ownership) === '{"default":0}'), true);
+  for (const user of game.users.filter((user) => !user.isGM)) {
+    assert.equal(entry.testUserPermission(user, 'OBSERVER'), false);
+    assert.equal(entry.pages.every((page) => !page.testUserPermission(user, 'OBSERVER')), true);
+  }
+  const writes = game.writes.length;
+  await syncEntryPermissions(entry);
+  assert.equal(game.writes.length, writes, 'already-revoked entries should not trigger more updates');
 });
 
 test('ownership changes transfer access to the new player and revoke the previous player', async () => {
@@ -86,7 +91,7 @@ test('ownership changes transfer access to the new player and revoke the previou
   const { entry } = await writeEntityEntry('adventurers', adventurer, [], scope, await world(), labels);
   actor.ownership = { default: 0, bob: 3 };
   await syncEntryPermissions(entry);
-  assert.deepEqual(entry.ownership, { default: 0, bob: 2 });
+  assert.deepEqual(entry.ownership, { default: 0, alice: 0, bob: 2 });
 });
 
 test('places and factions keep different import identities even when their IDs coincide', async () => {
@@ -205,7 +210,7 @@ test('a concurrent owner refresh cannot restore an Atlas share revoked by a reim
   release();
   await Promise.all([refresh, reimport]);
   const page = entry.pages.find((page) => page.getFlag(MODULE_ID, 'part') === 'document');
-  assert.deepEqual(page.ownership, { default: 0, pending: 2 });
+  assert.deepEqual(page.ownership, { default: 0, alice: 0, bob: 0, pending: 2 });
   assert.deepEqual(page.getFlag(MODULE_ID, 'permissionSource').viewerIds, []);
-  assert.deepEqual(entry.ownership, { default: 0, pending: 2 });
+  assert.deepEqual(entry.ownership, { default: 0, alice: 0, bob: 0, pending: 2 });
 });

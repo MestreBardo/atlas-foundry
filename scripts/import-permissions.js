@@ -63,11 +63,21 @@ export const mergeOwnership = (ownerships) => {
   return result;
 };
 
-/** Foundry merges update objects; explicitly delete readers removed by Atlas or by a link change. */
+/** Ownership fields accept only numeric levels; retain removed readers with an explicit NONE. */
 export const ownershipUpdate = (previous = {}, desired) => ({
+  ...Object.fromEntries(Object.keys(previous).map((id) => [id, 0])),
   ...desired,
-  ...Object.fromEntries(Object.keys(previous).filter((id) => !Object.hasOwn(desired, id)).map((id) => [`-=${id}`, null])),
 });
+
+/** Explicit NONE entries and an absent user under a NONE default are equivalent. */
+export const ownershipMatches = (previous = {}, desired) => {
+  if (previous.default !== desired.default) return false;
+  const ids = new Set([...Object.keys(previous), ...Object.keys(desired)]);
+  ids.delete('default');
+  return [...ids].every((id) =>
+    (previous[id] ?? previous.default ?? 0) === (desired[id] ?? desired.default ?? 0),
+  );
+};
 
 export const snapshotLocalOwnership = (page) => {
   const ownership = privateOwnership();

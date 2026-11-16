@@ -1,6 +1,12 @@
 import { MODULE_ID } from '../../scripts/person-journal.js';
 
 const levels = { NONE: 0, LIMITED: 1, OBSERVER: 2, OWNER: 3 };
+const validateOwnership = (ownership) => {
+  if (!ownership || Array.isArray(ownership) || typeof ownership !== 'object' ||
+    Object.entries(ownership).some(([id, level]) => id.startsWith('-=') || !Number.isInteger(level) || level < -1 || level > 3)) {
+    throw new TypeError('ownership: is not a mapping of user IDs and document permission levels');
+  }
+};
 const merge = (object, changes) => {
   for (const [key, value] of Object.entries(changes)) {
     if (key.startsWith('-=')) delete object[key.slice(2)];
@@ -18,6 +24,7 @@ export class MockDocument {
     this.pack = pack;
     this.flags ??= {};
     this.ownership ??= { default: 0 };
+    validateOwnership(this.ownership);
     this.uuid = parent ? `${parent.uuid}.JournalEntryPage.${this.id}`
       : pack ? `Compendium.${pack}.${this.id}` : `${documentName}.${this.id}`;
     game.uuidDocuments.set(this.uuid, this);
@@ -33,7 +40,12 @@ export class MockDocument {
     return own >= (levels[level] ?? level);
   }
   get hasPlayerOwner() { return game.users.some((user) => !user.isGM && user.role > 0 && this.testUserPermission(user, 3)); }
-  async update(changes) { game.writes.push({ type: this.documentName, id: this.id, changes }); merge(this, changes); return this; }
+  async update(changes) {
+    if (Object.hasOwn(changes, 'ownership')) validateOwnership(changes.ownership);
+    game.writes.push({ type: this.documentName, id: this.id, changes });
+    merge(this, changes);
+    return this;
+  }
   async updateEmbeddedDocuments(_type, changes) {
     for (const change of changes) await this.pages.find(({ id }) => id === change._id).update(change);
   }
