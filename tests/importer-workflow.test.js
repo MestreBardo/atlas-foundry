@@ -36,7 +36,7 @@ beforeEach(() => {
     const kind = path.split('/')[3];
     const id = path.split('/')[4];
     assert.ok(data[kind], path);
-    const payload = path.endsWith('/documents') ? [{ id: 'd1', title: 'Letter', text: 'Original' }]
+    const payload = path.endsWith('/documents') || path.endsWith('/notes') ? [{ id: 'd1', title: 'Letter', text: 'Original' }]
       : !id || id === 'mine' ? [data[kind]] : data[kind];
     return { ok: true, json: async () => ({ payload }) };
   };

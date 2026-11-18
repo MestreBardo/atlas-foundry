@@ -101,11 +101,48 @@ export class AtlasClient {
 
   listEntityDocuments(scope, kind, id) {
     checkEntityKind(scope, kind);
+    if (kind === 'adventurers') return this.listAdventurerNotes(scope.id, id);
     return this.getAll(`${scopePath(scope)}/${kind}/${encodeURIComponent(id)}/documents`, {
-      adventurerId: kind === 'adventurers' ? null : scope.adventurerId,
+      adventurerId: scope.adventurerId,
     });
   }
+
+  /**
+   * Adventurers have notes instead of documents. Acting as the adventurer lists the notes of the
+   * game master on the sheet, the ones the adventurer wrote and the ones others shared and the
+   * adventurer accepted; a game master who cannot act as the adventurer only gets their own notes.
+   */
+  async listAdventurerNotes(campaignId, adventurerId) {
+    const path = `/campaigns/${encodeURIComponent(campaignId)}/adventurers/${encodeURIComponent(adventurerId)}/notes`;
+    let notes;
+    try {
+      notes = (await this.get(path, { adventurerId }))?.payload ?? [];
+    } catch (error) {
+      if (error?.status !== 403) throw error;
+      notes = (await this.get(path))?.payload ?? [];
+    }
+    return notes.map(noteToDocument);
+  }
 }
+
+const NOTE_TITLE_LENGTH = 60;
+
+export const noteToDocument = (note) => {
+  const firstLine = (note.text ?? '').trim().split('\n')[0].replace(/[#>*_`~]/g, '').trim();
+  const title = note.title?.trim() || (firstLine.length > NOTE_TITLE_LENGTH
+    ? `${firstLine.slice(0, NOTE_TITLE_LENGTH - 1)}…` : firstLine) || note.id;
+  return {
+    id: note.id,
+    title,
+    subtitle: note.ownerName ?? null,
+    text: note.text ?? '',
+    parameters: [],
+    tags: [],
+    ownerId: note.ownerId ?? null,
+    viewerIds: [...(note.viewerIds ?? [])],
+    pendingIds: [...(note.pendingIds ?? [])],
+  };
+};
 
 const checkEntityKind = (scope, kind) => {
   if (!['persons', 'adventurers', 'places', 'factions'].includes(kind) ||

@@ -150,17 +150,37 @@ test('lists and finds places and factions with encoded scope IDs and the selecte
   assert.ok(paths.includes('https://api.test/campaigns/c%2F1/factions/e%2F1'));
 });
 
-test('adventurer imports use their own document endpoint and keep accepted and pending shares distinct', async () => {
+test('adventurer imports read the notes of the adventurer acting as them and keep accepted and pending shares distinct', async () => {
+  const requests = [];
   const client = new AtlasClient({ apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
     fetchImplementation: async (url, options) => {
-      assert.equal(options.headers['X-Adventurer-Id'], undefined);
+      requests.push({ url, adventurerId: options.headers['X-Adventurer-Id'] });
       return jsonResponse(200, { payload: url.includes('/mine')
         ? [{ id: 'a1' }, { id: 'a2' }]
-        : [{ id: 'd1', viewerIds: ['a2'], pendingIds: ['a3'] }] });
+        : [{ id: 'n1', title: '', text: '# Plano\nSeguir o mapa', ownerId: 'a1', ownerName: 'Gandalf', viewerIds: ['a2'], pendingIds: ['a3'] }] });
     },
   });
   const scope = { type: 'campaign', id: 'c1', adventurerId: 'a1' };
   assert.deepEqual(await client.listEntities(scope, 'adventurers'), [{ id: 'a1' }]);
-  assert.deepEqual(await client.listEntityDocuments(scope, 'adventurers', 'a1'), [{ id: 'd1', viewerIds: ['a2'], pendingIds: ['a3'] }]);
+  assert.deepEqual(await client.listEntityDocuments(scope, 'adventurers', 'a1'), [{
+    id: 'n1', title: 'Plano', subtitle: 'Gandalf', text: '# Plano\nSeguir o mapa', parameters: [], tags: [],
+    ownerId: 'a1', viewerIds: ['a2'], pendingIds: ['a3'],
+  }]);
+  assert.deepEqual(requests.at(-1), { url: 'https://api.test/campaigns/c1/adventurers/a1/notes', adventurerId: 'a1' });
   await assert.rejects(client.listEntities({ type: 'world', id: 'w1' }, 'adventurers'), { code: 'INVALID_IMPORT_KIND' });
+});
+
+test('a game master who cannot act as the adventurer imports only their own notes', async () => {
+  const headers = [];
+  const client = new AtlasClient({ apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
+    fetchImplementation: async (_url, options) => {
+      headers.push(options.headers['X-Adventurer-Id']);
+      return options.headers['X-Adventurer-Id']
+        ? jsonResponse(403, { errors: [{ code: 'ADVENTURER_FORBIDDEN' }] })
+        : jsonResponse(200, { payload: [{ id: 'n2', title: 'Segredo', text: 'Texto', ownerId: null }] });
+    },
+  });
+  const notes = await client.listEntityDocuments({ type: 'campaign', id: 'c1' }, 'adventurers', 'a9');
+  assert.deepEqual(headers, ['a9', undefined]);
+  assert.deepEqual(notes.map(({ title, ownerId }) => ({ title, ownerId })), [{ title: 'Segredo', ownerId: null }]);
 });
