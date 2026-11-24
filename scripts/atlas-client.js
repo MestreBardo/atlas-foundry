@@ -48,12 +48,36 @@ export class AtlasClient {
     return items;
   }
 
-  listWorlds() {
-    return this.getAll('/worlds');
+  /** The token reaches only its world and campaigns, so the lists come from the token itself. */
+  findTokenContext() {
+    this.tokenContext ??= this.get('/personal-token')
+      .then((body) => body?.payload ?? null)
+      .catch((error) => {
+        this.tokenContext = null;
+        throw error;
+      });
+    return this.tokenContext;
   }
 
-  listCampaigns(worldId) {
-    return this.getAll(`/worlds/${encodeURIComponent(worldId)}/campaigns`);
+  async listWorlds() {
+    const context = await this.findTokenContext();
+    const worlds = new Map();
+    if (context?.world) {
+      worlds.set(context.world.id, { id: context.world.id, name: context.world.name ?? context.world.id });
+    }
+    for (const campaign of context?.campaigns ?? []) {
+      if (campaign.worldId && !worlds.has(campaign.worldId)) {
+        worlds.set(campaign.worldId, { id: campaign.worldId, name: campaign.worldName ?? campaign.worldId });
+      }
+    }
+    return [...worlds.values()];
+  }
+
+  async listCampaigns(worldId) {
+    const context = await this.findTokenContext();
+    return (context?.campaigns ?? [])
+      .filter((campaign) => campaign.worldId === worldId)
+      .map((campaign) => ({ id: campaign.id, name: campaign.name ?? campaign.id, worldId: campaign.worldId }));
   }
 
   listMyAdventurers(campaignId) {

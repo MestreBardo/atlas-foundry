@@ -4,6 +4,7 @@ export const describeError = (error) => {
   const code = error?.code ?? 'UNKNOWN';
   const key = {
     NETWORK_ERROR: 'Network', HTTP_401: 'Unauthorized', HTTP_403: 'Forbidden',
+    PERSONAL_TOKEN_FORBIDDEN: 'TokenForbidden',
     SOURCE_NOT_FOUND: 'SourceNotFound', INVALID_LINK: 'InvalidLink', DUPLICATE_ADVENTURER: 'DuplicateAdventurer',
     INVALID_IMPORT_KIND: 'InvalidImportKind', INVALID_ACTOR_TYPE: 'InvalidActorType',
     INVALID_ATLAS_RESPONSE: 'InvalidAtlasResponse', INVALID_DESTINATION: 'InvalidDestination',

@@ -24,9 +24,11 @@ let actorLinks;
 let requests;
 let saves;
 const responses = {
-  '/worlds?limit=50': [{ id: 'w1', name: 'World' }, { id: 'w2', name: 'Other World' }],
-  '/worlds/w1/campaigns?limit=50': [{ id: 'c1', name: 'Campaign' }],
-  '/worlds/w2/campaigns?limit=50': [],
+  '/personal-token': {
+    kind: 'world',
+    world: { id: 'w1', name: 'World', permissions: { persons: 'read' } },
+    campaigns: [{ id: 'c1', name: 'Campaign', worldId: 'w1', worldName: 'World', permissions: { persons: 'read' } }],
+  },
   '/campaigns/c1/adventurers/names': [{ id: 'adv1', name: 'Ada' }, { id: 'adv2', name: 'Bob' }],
   '/campaigns/c1/adventurers/mine?limit=50': [{ id: 'adv1', name: 'Ada' }],
   '/worlds/w1/persons?limit=50': [{ id: 'p1', name: 'World Person' }],
@@ -159,7 +161,12 @@ test('clearing the campaign saves world access and preserves existing actor link
   assert.deepEqual(updates, []);
 });
 
-test('changing worlds clears the old campaign and viewpoint before saving', async () => {
+test('changing worlds clears the old campaign and viewpoint before saving', async (testContext) => {
+  const context = responses['/personal-token'];
+  responses['/personal-token'] = {
+    kind: 'world', world: { id: 'w2', name: 'Other World', permissions: { persons: 'read' } }, campaigns: [],
+  };
+  testContext.after(() => { responses['/personal-token'] = context; });
   const application = new AtlasSettingsApplication();
   await initialize(application);
   await change(application, 'worldId', 'w2');

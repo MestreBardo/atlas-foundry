@@ -6,7 +6,7 @@ Módulo do Foundry VTT (v14 em diante) da família Atlas. Importa **pessoas, ave
 
 1. Copie esta pasta para `Data/modules/atlas-foundry` do Foundry (ou compacte como `atlas-foundry.zip` com o `module.json` na raiz e instale pelo manifesto quando houver uma release).
 2. Ative o módulo **Atlas** no mundo.
-3. No Atlas, abra **Perfil → Integrações**, crie um token (por exemplo "Foundry da mesa") e copie.
+3. No Atlas, abra **Perfil → Integrações** e crie um token (por exemplo "Foundry da mesa"). Só mestres criam tokens. Escolha se ele é de **mundo** (o mundo e as campanhas dele que você marcar) ou de uma **campanha** e o que pode fazer em cada área; para importar, dê **Ler** em Pessoas, Lugares, Facções e, na campanha, Personagens. Copie o token.
 4. No Foundry, em **Configurações → Configurar módulos → Atlas**, cole o token. O token fica neste navegador (escopo `client`); o endereço da API é interno e não é editável.
 5. Ainda nas configurações do Atlas, abra **Configurar integração**, escolha o mundo e, se quiser, a campanha. Salve. A origem é compartilhada neste mundo do Foundry (escopo `world`). Sem campanha selecionada, o acesso é ao próprio mundo. Na campanha, **Ver como** permite usar um dos seus personagens; o padrão é o mestre.
 
@@ -75,7 +75,7 @@ atlas.getActorLink(game.actors.get('ACTOR_ID'), 'CAMPAIGN_ID'); // Outra campanh
 
 ## Identificação das chamadas
 
-Toda requisição à API, inclusive as páginas seguintes de uma listagem, envia `X-Atlas-Client: foundry`. A API reconhece a integração por esse cabeçalho e precisa permiti-lo no CORS antes de usar esta versão do módulo. É uma identificação declarada pelo cliente; a autenticação continua pelo token pessoal, com acesso somente de leitura e as permissões existentes.
+Toda requisição à API, inclusive as páginas seguintes de uma listagem, envia `X-Atlas-Client: foundry`. A API reconhece a integração por esse cabeçalho e precisa permiti-lo no CORS antes de usar esta versão do módulo. É uma identificação declarada pelo cliente; a autenticação continua pelo token pessoal, limitado ao mundo, às campanhas e às permissões escolhidas no Atlas.
 
 ## Ficha de pessoa Atlas
 
@@ -99,4 +99,4 @@ Parágrafos iniciados por `{capitular} ` exibem a primeira letra ampliada, como 
 - `import-permissions.js` resolve os leitores por vínculo, `permission-sync.js` atualiza as permissões e `journal-lock.js` serializa alterações no mesmo diário. `actor-documents.js` verifica as permissões antes de listar ou abrir uma página.
 - A ficha Pessoa Atlas continua em `person-sheet.js` e `person-sheet-data.js`. O tema compartilhado está em `styles/atlas-theme.css`, `styles/atlas.css` e `styles/importer.css`. A origem dos elementos está em `assets/README.md`.
 - `npm test` roda os testes sem dependências. Incluem paginação, compartilhamentos aceitos e pendentes, revogação de acesso, páginas locais, pacotes privados, criação de Actors e importação por categoria.
-- A API aceita o token pessoal (`atlas_pat_…`) somente em `GET`. O cabeçalho `X-Atlas-Client: foundry` identifica o cliente sem conceder permissões.
+- A API aceita o token pessoal (`atlas_pat_…`) só no mundo e nas campanhas dele, com as permissões escolhidas; fora disso responde 403 `PERSONAL_TOKEN_FORBIDDEN`. O módulo só faz `GET`. As listas de mundos e campanhas das configurações vêm de `GET /personal-token`, que descreve o token. O cabeçalho `X-Atlas-Client: foundry` identifica o cliente sem conceder permissões.

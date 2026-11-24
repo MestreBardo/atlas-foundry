@@ -82,8 +82,9 @@
     },
     "Errors": {
       "Network": "Não foi possível falar com o Atlas. Confira sua conexão e tente novamente.",
-      "Unauthorized": "O token não vale mais. Crie outro no Atlas e cole nas configurações.",
+      "Unauthorized": "O token não vale mais (os tokens antigos foram revogados). Crie outro no Atlas e cole nas configurações.",
       "Forbidden": "Sua conta não pode ver isso no Atlas.",
+      "TokenForbidden": "Este token não alcança isso. No Atlas, em Perfil → Integrações, confira o mundo, as campanhas e as permissões dele (por exemplo, Pessoas, Lugares, Facções e Personagens em Ler).",
       "Generic": "O Atlas respondeu com um erro ({code}).",
       "SourceNotFound": "A origem selecionada não está mais disponível. Escolha novamente o mundo e a campanha.",
       "InvalidLink": "A ficha não pertence mais a um jogador ou o aventureiro não está disponível nesta campanha. Recarregue as configurações.",

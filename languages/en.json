@@ -82,8 +82,9 @@
     },
     "Errors": {
       "Network": "Could not reach Atlas. Check your connection and try again.",
-      "Unauthorized": "The token is no longer valid. Create a new one in Atlas and paste it in the settings.",
+      "Unauthorized": "The token is no longer valid (old tokens were revoked). Create a new one in Atlas and paste it in the settings.",
       "Forbidden": "Your account cannot see this in Atlas.",
+      "TokenForbidden": "This token does not reach that. In Atlas, under Profile → Integrations, check its world, campaigns and permissions (for example People, Places, Factions and Characters at Read).",
       "Generic": "Atlas answered with an error ({code}).",
       "SourceNotFound": "The selected source is no longer available. Choose the world and campaign again.",
       "InvalidLink": "The Actor is no longer owned by a player or the adventurer is unavailable in this campaign. Reload the settings.",
