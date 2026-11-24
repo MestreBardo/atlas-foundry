@@ -2,7 +2,7 @@
   "id": "atlas-foundry",
   "title": "Atlas",
   "description": "Import Atlas persons, adventurers, places, factions and documents into journals, Actors and private compendiums.",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "authors": [
     {
       "name": "Vinycius Monteiro"
