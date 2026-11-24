@@ -50,8 +50,6 @@
       "Import": "Importar ({count})",
       "Done": "Atlas: {created} criados, {updated} atualizados, {failed} com erro. Actors criados: {actors}.",
       "NoSource": "Escolha um mundo nas configurações do Atlas para importar pessoas.",
-      "Eyebrow": "Atlas · Arquivo da mesa",
-      "Subtitle": "Traga os registros do seu mundo para a mesa.",
       "Reload": "Atualizar lista",
       "Category": "Tipo de registro",
       "Options": "Opções de importação",

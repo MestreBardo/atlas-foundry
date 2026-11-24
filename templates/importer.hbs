@@ -1,13 +1,4 @@
 <div class="atlas-importer-root atlas-workbench">
-  <header class="atlas-workbench-header">
-    <div>
-      <p class="atlas-workbench-eyebrow">{{atlasLocalize "ATLAS.Importer.Eyebrow"}}</p>
-      <h1>{{atlasLocalize "ATLAS.Importer.Title"}}</h1>
-      <p class="atlas-workbench-subtitle">{{atlasLocalize "ATLAS.Importer.Subtitle"}}</p>
-    </div>
-    <i class="fa-solid fa-book-atlas atlas-workbench-seal" aria-hidden="true"></i>
-  </header>
-
   {{#unless hasToken}}
     <section class="atlas-importer-body atlas-workbench-empty">
       <i class="fa-solid fa-key" aria-hidden="true"></i>
@@ -30,8 +21,7 @@
         {{/each}}
       </nav>
 
-      <fieldset class="atlas-import-options" {{#if busy}}disabled{{/if}}>
-        <legend class="atlas-workbench-eyebrow">{{atlasLocalize "ATLAS.Importer.Options"}}</legend>
+      <fieldset class="atlas-import-options" aria-label="{{atlasLocalize "ATLAS.Importer.Options"}}" {{#if busy}}disabled{{/if}}>
         <label class="atlas-import-option"><span>{{atlasLocalize "ATLAS.Importer.Destination"}}</span>
           <select name="destination">
             <option value="world" {{#if inWorld}}selected{{/if}}>{{atlasLocalize "ATLAS.Importer.InWorld"}}</option>
@@ -57,12 +47,12 @@
 
       {{#if itemsLoaded}}
         <section class="atlas-importer-body atlas-workbench-list">
-          <div class="atlas-workbench-list-title"><h2>{{kindLabel}}</h2><span>{{visibleCount}} / {{totalCount}}</span></div>
           <div class="atlas-persons-toolbar">
             <input type="search" name="filter" value="{{filter}}" placeholder="{{atlasLocalize "ATLAS.Importer.Filter"}}" aria-label="{{atlasLocalize "ATLAS.Importer.Filter"}}" {{#if busy}}disabled{{/if}}>
+            <span class="atlas-workbench-count">{{visibleCount}} / {{totalCount}}</span>
             <button type="button" data-action="toggleAll" {{#if busy}}disabled{{/if}}>{{atlasLocalize "ATLAS.Importer.ToggleAll"}}</button>
           </div>
-          <ul class="atlas-person-list">
+          <ul class="atlas-person-list" aria-label="{{kindLabel}}">
             {{#each items}}
               <li><label class="atlas-person {{#if selected}}selected{{/if}}">
                 <input type="checkbox" name="entityId" value="{{id}}" {{#if selected}}checked{{/if}} {{#if ../busy}}disabled{{/if}}>

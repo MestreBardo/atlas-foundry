@@ -50,8 +50,6 @@
       "Import": "Import ({count})",
       "Done": "Atlas: {created} created, {updated} updated, {failed} failed. Actors created: {actors}.",
       "NoSource": "Choose a world in the Atlas settings to import persons.",
-      "Eyebrow": "Atlas · Table archive",
-      "Subtitle": "Bring the records of your world to the table.",
       "Reload": "Refresh list",
       "Category": "Record type",
       "Options": "Import options",
