@@ -92,43 +92,45 @@ test('answers a network failure with its own code', async () => {
   await assert.rejects(client.listWorlds(), { code: 'NETWORK_ERROR' });
 });
 
-test('loads every person document page with the selected campaign viewpoint', async () => {
+test('imports the person notes with the selected campaign viewpoint', async () => {
   const requests = [];
   const client = new AtlasClient({
     apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
     fetchImplementation: async (url, options) => {
       requests.push(url);
       assert.equal(options.headers['X-Adventurer-Id'], 'adv1');
-      return jsonResponse(200, url.includes('cursor=')
-        ? { payload: [{ id: 'd2', text: 'Second' }] }
-        : { payload: [{ id: 'd1', text: 'First' }], links: { next: { href: '/campaigns/c1/persons/p1/documents?limit=50&cursor=d1' } } });
+      return jsonResponse(200, { payload: [
+        { id: 'n1', title: 'Rumor', text: 'First', ownerId: 'adv1', viewerIds: ['adv2'] },
+        { id: 'n2', title: null, text: '# Second line\nMore', ownerId: null, ownerName: 'Mestre' },
+      ] });
     },
   });
-  const documents = await client.listPersonDocuments({ type: 'campaign', id: 'c1', adventurerId: 'adv1' }, 'p1');
-  assert.equal(requests[0], 'https://api.test/campaigns/c1/persons/p1/documents?limit=50');
-  assert.deepEqual(documents.map(({ id }) => id), ['d1', 'd2']);
+  const documents = await client.listEntityDocuments({ type: 'campaign', id: 'c1', adventurerId: 'adv1' }, 'persons', 'p1');
+  assert.deepEqual(requests, ['https://api.test/campaigns/c1/persons/p1/notes']);
+  assert.deepEqual(documents.map(({ id, title, ownerId, viewerIds }) => ({ id, title, ownerId, viewerIds })), [
+    { id: 'n1', title: 'Rumor', ownerId: 'adv1', viewerIds: ['adv2'] },
+    { id: 'n2', title: 'Second line', ownerId: null, viewerIds: [] },
+  ]);
 });
 
-test('uses the world document endpoint and encodes identifiers', async () => {
+test('uses the world person notes endpoint and encodes identifiers', async () => {
   const client = new AtlasClient({
     apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
     fetchImplementation: async (url, options) => {
-      assert.equal(url, 'https://api.test/worlds/world%2F1/persons/person%201/documents?limit=50');
+      assert.equal(url, 'https://api.test/worlds/world%2F1/persons/person%201/notes');
       assert.equal(options.headers['X-Adventurer-Id'], undefined);
       return jsonResponse(200, { payload: [] });
     },
   });
-  assert.deepEqual(await client.listPersonDocuments({ type: 'world', id: 'world/1' }, 'person 1'), []);
+  assert.deepEqual(await client.listPersonNotes({ type: 'world', id: 'world/1' }, 'person 1'), []);
 });
 
-test('fails an incomplete document list instead of treating it as empty', async () => {
+test('fails the person import when the notes cannot be read', async () => {
   const client = new AtlasClient({
     apiBaseUrl: 'https://api.test', token: 'atlas_pat_x',
-    fetchImplementation: async (url) => url.includes('cursor=')
-      ? jsonResponse(403, {})
-      : jsonResponse(200, { payload: [{ id: 'd1' }], links: { next: { href: '/worlds/w1/persons/p1/documents?cursor=next' } } }),
+    fetchImplementation: async () => jsonResponse(403, { errors: [{ code: 'PERSON_FORBIDDEN' }] }),
   });
-  await assert.rejects(client.listPersonDocuments({ type: 'world', id: 'w1' }, 'p1'), { code: 'HTTP_403' });
+  await assert.rejects(client.listPersonNotes({ type: 'world', id: 'w1' }, 'p1'), { code: 'PERSON_FORBIDDEN' });
 });
 
 test('lists and finds places and factions with encoded scope IDs and the selected viewpoint', async () => {

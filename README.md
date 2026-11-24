@@ -22,7 +22,7 @@ Na aba **Diário**, o mestre vê o botão **Importar do Atlas**. A janela usa o 
 4. Se quiser uma ficha também, marque **Criar Actor também** e escolha um tipo de Actor oferecido pelo sistema da mesa.
 5. Filtre, marque os registros e clique em **Importar**. Cada registro inclui imagem, perfil, descrição e documentos disponíveis. A janela mostra o progresso e o resultado de cada item.
 
-Pessoas mantêm a ficha **Pessoa Atlas**. Locais e facções importam nome, imagem, descrição, tags, conexões visíveis e documentos. Aventureiros incluem perfil, história e as notas do personagem (as do mestre na ficha, as que ele escreveu e as que outros compartilharam e ele aceitou).
+Pessoas mantêm a ficha **Pessoa Atlas** e importam as notas da pessoa (na campanha, as do personagem escolhido ou, sem personagem, as do mestre; no mundo, as da conta do token). Locais e facções importam nome, imagem, descrição, tags, conexões visíveis e documentos. Aventureiros incluem perfil, história e as notas do personagem (as do mestre na ficha, as que ele escreveu e as que outros compartilharam e ele aceitou).
 
 Reimportar atualiza a entrada e suas páginas sem duplicá-las. As páginas importadas mantêm os identificadores; documentos removidos do Atlas deixam de constar na entrada. Páginas locais são preservadas, sem ampliar suas permissões quando a entrada ganha novos leitores. Se a leitura de qualquer página da API falhar, a importação anterior daquele registro não é alterada.
 

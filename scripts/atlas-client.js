@@ -69,10 +69,15 @@ export class AtlasClient {
     return this.getAll(`${scopePath(scope)}/persons`, { adventurerId: scope.adventurerId });
   }
 
-  listPersonDocuments(scope, personId) {
-    return this.getAll(`${scopePath(scope)}/persons/${encodeURIComponent(personId)}/documents`, {
-      adventurerId: scope.adventurerId,
-    });
+  /**
+   * Persons have notes instead of documents. In a campaign the notes follow the selected viewpoint:
+   * the adventurer's own and accepted notes, or the game master's notes without one. In a world the
+   * notes belong to the user of the token.
+   */
+  async listPersonNotes(scope, personId) {
+    const path = `${scopePath(scope)}/persons/${encodeURIComponent(personId)}/notes`;
+    const notes = (await this.get(path, { adventurerId: scope.adventurerId }))?.payload ?? [];
+    return notes.map(noteToDocument);
   }
 
   async findPerson(scope, personId) {
@@ -102,6 +107,7 @@ export class AtlasClient {
   listEntityDocuments(scope, kind, id) {
     checkEntityKind(scope, kind);
     if (kind === 'adventurers') return this.listAdventurerNotes(scope.id, id);
+    if (kind === 'persons') return this.listPersonNotes(scope, id);
     return this.getAll(`${scopePath(scope)}/${kind}/${encodeURIComponent(id)}/documents`, {
       adventurerId: scope.adventurerId,
     });
